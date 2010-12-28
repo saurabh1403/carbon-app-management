@@ -82,7 +82,7 @@
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Debug/log4cxx.lib"
+				ImportLibrary="$(OutDir)\log4cxx.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -175,7 +175,7 @@
 				SubSystem="1"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\Release/log4cxx.lib"
+				ImportLibrary="$(OutDir)\log4cxx.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
