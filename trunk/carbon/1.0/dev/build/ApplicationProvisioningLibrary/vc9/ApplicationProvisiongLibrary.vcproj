@@ -20,7 +20,8 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
+			UseOfMFC="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,8 +42,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;$(NOINHERIT)"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;APPLICATIONPROVISIONGLIBRARY_EXPORTS"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;$(NOINHERIT)"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,10 +62,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\apl.dll"
+				AdditionalDependencies="log4cxx.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -93,7 +96,8 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
+			UseOfMFC="0"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -116,8 +120,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;$(NOINHERIT)"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;APPLICATIONPROVISIONGLIBRARY_EXPORTS"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;$(NOINHERIT)"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -135,10 +139,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\apl.dll"
+				AdditionalDependencies="log4cxx.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -185,12 +191,20 @@
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\win\stdafx.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\win\Utilities.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="xplat"
 				>
 				<File
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\xplat\ApplicationProvisiongLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
 					>
 				</File>
 			</Filter>
@@ -221,6 +235,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\source\common\include\xplat\Constants.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Log.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Utilities.h"
 					>
 				</File>
 			</Filter>
