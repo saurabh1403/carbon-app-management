@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include <iostream>
 #include "Log.h"
+#include "SqliteWrapper.h"
+
 
 void testLog()
 {
@@ -19,12 +21,56 @@ void testLog()
 
 }
 
+
+void testDb()
+{
+
+	DMM obj;
+	int retVal = obj.init("d:\\pim.db");
+
+	//insert
+	//aVectorStr temp;
+	//temp.push_back("2");
+	//temp.push_back("name");
+	//temp.push_back("saurabh");
+	//bool ret = obj.insertOrReplaceQuery(temp, "table1");
+	//obj.commit();
+
+	////delete
+	//aMapStr tempMap;
+	//tempMap["value"] = "zareen";
+	//ret = obj.deleteRecordquery(tempMap, "table1");
+	//obj.commit();
+
+	//select query
+
+	aMapStr tempMap;
+	tempMap["name"] = "UiWA";
+
+	string field = " * ";
+
+	const char **outlist;
+	bool ret = obj.getQueryResult(field, tempMap, "applet_registration_info", &outlist);
+
+	int i  = 0;
+
+	while(outlist[i] != NULL)
+	{
+		cout<<outlist[i];
+		cout<<"\n";
+		i++;
+	}
+	obj.commit();
+
+}
+
 int main()
 {
 
 	std::cout<<"hello world\n";
 
-	testLog();
+//	testLog();
+	testDb();
 
 	return 0;
 }
