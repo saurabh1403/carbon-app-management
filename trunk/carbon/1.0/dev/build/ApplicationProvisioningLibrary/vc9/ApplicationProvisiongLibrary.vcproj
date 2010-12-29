@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -204,7 +204,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\common\source\xplat\EDMM.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\SqliteWrapper.cpp"
 					>
 				</File>
 			</Filter>
@@ -238,7 +246,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\common\include\xplat\EDMM.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\common\include\xplat\Log.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\SqliteWrapper.h"
 					>
 				</File>
 				<File
@@ -252,6 +268,22 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="Sqlite"
+			>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3ext.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
