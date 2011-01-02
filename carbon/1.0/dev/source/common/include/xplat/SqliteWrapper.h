@@ -19,6 +19,8 @@ typedef std::vector<OSString> aVectorOsStr;
 static const int aBusyTimeoutMs = 2000;
 using namespace std;
 
+
+//TODO: make a memory pool and associate the clean up of that memory pool with the destructor
 class DMM
 {
 
@@ -41,7 +43,7 @@ public:
 
 	virtual bool updateQueryWithEqualPredicate(const aMapStr &keyValuesToSet, const aMapStr &keyValueToSearch, const string &tableName, const string &predicate = " = ");
 
-	virtual bool dbClose();
+	bool dbClose();
 
 	int queryForList(const char ***outList, const char *inQuery ...);
 	int queryNoReturn(const char *inQuery ...);

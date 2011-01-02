@@ -6,7 +6,7 @@
 #ifdef WIN32
 
 	#include <tchar.h>
-
+	#include <Windows.h>
 	#define OSConst(x)		_T(x)	
 	#define OSSlash		OSConst("\\")
 
