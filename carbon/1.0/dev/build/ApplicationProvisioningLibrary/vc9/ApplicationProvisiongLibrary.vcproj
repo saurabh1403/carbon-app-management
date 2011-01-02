@@ -202,7 +202,7 @@
 				Name="xplat"
 				>
 				<File
-					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\xplat\AESEncryption.cpp"
+					RelativePath="..\..\..\source\common\source\xplat\AESEncryption.cpp"
 					>
 				</File>
 				<File
@@ -248,7 +248,7 @@
 				Name="xplat"
 				>
 				<File
-					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\include\xplat\AESEncryption.h"
+					RelativePath="..\..\..\source\common\include\xplat\AESEncryption.h"
 					>
 				</File>
 				<File
