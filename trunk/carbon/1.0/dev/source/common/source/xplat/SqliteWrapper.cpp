@@ -156,7 +156,7 @@ bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const s
 		}
 
 		condition_str += itr->first;
-		condition_str += "" + predicate + "'" + itr->second + "' ";
+		condition_str += predicate + "'" + itr->second + "' ";
 
 	}
 
@@ -188,7 +188,7 @@ bool DMM::deleteRecordquery(const aMapStr &keyValue, const string &tableName, co
 		}
 
 		field_str += itr->first;
-		field_str += "" + predicate + "'" + itr->second + "' ";
+		field_str += predicate + "'" + itr->second + "' ";
 
 	}
 
@@ -199,10 +199,45 @@ bool DMM::deleteRecordquery(const aMapStr &keyValue, const string &tableName, co
 }
 
 
-bool DMM::updateQueryWithEqualPredicate(const aMapStr &keyValuesToSet, const aMapStr &keyValueToSearch, const string &tableName, const string &predicate)
+bool DMM::updateQueryWithEqualPredicate(const aMapStr &keyValuesToSet, const aMapStr &conditionPair, const string &tableName, const string &predicate)
 {
 
-	return true;
+
+	string query;
+	string condition_str, field_str;
+
+	field_str = " SET ";
+	aMapStr::const_iterator pItr = keyValuesToSet.begin();
+	for(int count = 0; pItr != keyValuesToSet.end(); pItr++, count++)
+	{
+
+		if(count > 0)
+		{
+			field_str += " , ";
+		}
+
+		field_str += pItr->first;
+		field_str += "='" + pItr->second + "'";
+
+	}
+
+	condition_str = " WHERE ";
+	aMapStr::const_iterator itr = conditionPair.begin();
+	for(int count = 0;itr != conditionPair.end(); itr++, count++)
+	{
+		if(count > 0)
+		{
+			condition_str += " AND ";
+		}
+
+		condition_str += itr->first;
+		condition_str += predicate + "'" + itr->second + "' ";
+
+	}
+
+	query += "UPDATE " + tableName + field_str + condition_str;
+
+	return (queryNoReturn(query.c_str()) == SQLITE_OK);
 
 }
 
@@ -440,7 +475,7 @@ bool DMM::dbClose()
 		int rv = sqlite3_close(db);
 
 		db = NULL;
-		return (rv);
+		return (rv == SQLITE_OK);
 	}
 	return true;
 }

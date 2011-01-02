@@ -1,0 +1,1 @@
+copy ..\..\..\imports\target\%1\win\log4cxx.dll ..\..\..\target\%1\win\log4cxx.dll

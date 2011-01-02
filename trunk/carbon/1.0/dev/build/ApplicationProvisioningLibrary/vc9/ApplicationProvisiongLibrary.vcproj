@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib"
+				AdditionalDependencies="log4cxx.lib crypt_static_lib.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
@@ -90,6 +90,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="PostBuild.bat $(ConfigurationName)"
 			/>
 		</Configuration>
 		<Configuration
@@ -97,7 +98,7 @@
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			UseOfMFC="0"
+			UseOfMFC="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -120,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -139,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib"
+				AdditionalDependencies="log4cxx.lib crypt_static_lib.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
@@ -169,6 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="PostBuild.bat $(ConfigurationName)"
 			/>
 		</Configuration>
 	</Configurations>
@@ -200,7 +202,15 @@
 				Name="xplat"
 				>
 				<File
+					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\xplat\AESEncryption.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\xplat\ApplicationProvisiongLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\CipherUtilities.cpp"
 					>
 				</File>
 				<File
@@ -238,7 +248,19 @@
 				Name="xplat"
 				>
 				<File
+					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\include\xplat\AESEncryption.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\include\xplat\ApplicationProvisioningLibrary.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CipherConfigurations.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CipherUtilities.h"
 					>
 				</File>
 				<File
@@ -285,10 +307,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
