@@ -210,6 +210,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\common\source\xplat\CarbonSteganography.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\common\source\xplat\CipherUtilities.cpp"
 					>
 				</File>
@@ -253,6 +257,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\include\xplat\ApplicationProvisioningLibrary.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CarbonSteganography.h"
 					>
 				</File>
 				<File
@@ -304,6 +312,30 @@
 			</File>
 			<File
 				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3ext.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Steganography"
+			>
+			<File
+				RelativePath="..\..\..\imports\Steganography\EasyBMP.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Steganography\EasyBMP.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Steganography\EasyBMP_BMP.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Steganography\EasyBMP_DataStructures.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Steganography\EasyBMP_VariousBMPutilities.h"
 				>
 			</File>
 		</Filter>
