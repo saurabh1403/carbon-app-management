@@ -16,7 +16,7 @@ namespace carbonStegano
 	bool retriveFileFromBmp(const std::string &inBmpFilePath, const std::string &outFilePath);
 	bool retriveFileFromBmpStream(const std::string &inBmpFileDataStream, const std::string &outFilePath);
 	bool retrieveDataFromBmpStream(const std::string &inBmpFileDatastream, const std::string &outData);
-	bool retrieveDataFromBmp(const std::string &inBmpFilePath, const std::string &outData);
+	bool retrieveDataFromBmp(const std::string &inBmpFilePath, std::string &outData);
 	bool hideDataInBmp(const std::string &inData, const std::string &inBmpFilePath, const std::string &outBmpFilePath);
 
 #ifdef WIN32
