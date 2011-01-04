@@ -383,7 +383,6 @@ void EasyBMPstegoInternalHeader::InitializeFromFileData( const char* fileData, i
 }
 
 
-
 namespace carbonStegano
 {
 	bool hideFileInBmp(const std::string &inFilePath, const std::string &inBmpFilePath, const std::string &outBmpFilePath)

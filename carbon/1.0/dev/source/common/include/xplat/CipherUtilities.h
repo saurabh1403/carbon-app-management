@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "CipherConfigurations.h"
+#include "Utilities.h"
 
 #include "SecBlock.h"
 using CryptoPP::SecByteBlock;
@@ -36,21 +37,25 @@ public:
 
 	~AESSecretKeyContainer()
 	{
+		resetKeys();
+	}
+
+	//copy constructor
+	AESSecretKeyContainer(const AESSecretKeyContainer &);
+
+	void resetKeys()
+	{
 		if(key)
 		{
 			delete [] key;
 			key = NULL;
 		}
-
 		if(iv)
 		{
 			delete [] iv;
 			iv = NULL;
 		}
 	}
-
-	//copy constructor
-	AESSecretKeyContainer(const AESSecretKeyContainer &);
 
 	bool isKeyValid() const
 	{
@@ -62,10 +67,17 @@ public:
 
 	void initWithRandomKeys();
 
+	//it follows a particular protocol in case of retrieving keys from the stream
+	bool initKeysFromKeyStream(const char *keyStream);
+
+	//writing keys to the stream
+	bool writeKeysIntoStream(std::string &outKeyStream);
+
 	void setKey(byte *inKey, size_t keySize = AES::DEFAULT_KEYLENGTH);
 	void setIV(byte *inIV, size_t ivSize = AES::BLOCKSIZE);
 	void setAlgoCode();
 
+	//bool initAESKeysWithValues(byte* key, byte*iv, int key_length = AES::DEFAULT_KEYLENGTH, int iv_length = AES::BLOCKSIZE, AESSecretKeyContainer &outKeyContainer);
 
 	byte* AESSecretKeyContainer::getKey() const
 	{
@@ -97,15 +109,5 @@ private:
 
 };
 
-//init with the stream of encoded key
-//currently, the supported algorithm is reading the key xml file which is embedded in an image file using a password protection.
-bool getAESKeysFromHermitCrab(const std::string &HermitStream, AESSecretKeyContainer &outKeyContainer );
-
-//generate a key container from a db key stream.
-//this db key stream can be anything - key in a hermit crab with password, key in some encoded manner etc. 
-//it follows a particular protocol in case of retrieving keys from the db stream
-bool getAESKeysFromDbKeyStream(std::string dbKeyStream, AESSecretKeyContainer &outKeyContainer);
-
-//bool initAESKeysWithValues(byte* key, byte*iv, int key_length = AES::DEFAULT_KEYLENGTH, int iv_length = AES::BLOCKSIZE, AESSecretKeyContainer &outKeyContainer);
 
 }
