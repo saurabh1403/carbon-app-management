@@ -16,7 +16,9 @@ namespace carbonUtilities
 	//chars_count denotes how many chars should be there in the array. if 0 or smaller than required, it would create of appropriate length.
 	bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count = 0);
 
+	bool cuCreateFileWithData( const void *data, unsigned int length, OSString &filePath);
 
+//	bool readFromFile(const string &infilePath, char *outArr);
 
 
 }

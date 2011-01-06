@@ -315,7 +315,7 @@ void EasyBMPstegoInternalHeader::InitializeFromFileData( const char* fileData, i
 	//}
 
 	FileSize = fileDataSize;
-	FileSize--;
+//	FileSize--;
 
 	MaxCharsToEncode -= NumberOfCharsToEncode;
 	if( FileSize > MaxCharsToEncode )
