@@ -61,4 +61,31 @@ bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count
 }
 
 
+
+
+bool utilCreateFileWithData( const void *data, int length, OSString &filePath )
+{
+	HANDLE hOutputFile=::CreateFile(filePath.c_str(),GENERIC_WRITE,FILE_SHARE_READ ,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+
+	if (INVALID_HANDLE_VALUE == hOutputFile)
+	{
+		return false;
+	}
+
+	DWORD bytesWritten = 0;
+	if(WriteFile(hOutputFile,data, length,&bytesWritten,NULL))
+	{
+//		utilFlushFileBuffers(filePath);
+	}
+	else
+	{
+		CloseHandle(hOutputFile);
+		return false;
+	}
+	CloseHandle(hOutputFile);
+
+	return true;
+}
+
+
 }
