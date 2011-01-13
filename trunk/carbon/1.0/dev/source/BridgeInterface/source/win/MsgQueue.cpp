@@ -1,7 +1,6 @@
 
 #include "MsgQueue.h"
 
-
 MsgQueue::MsgQueue()
 {
 	InitializeCriticalSection(&carbonCritSec);
