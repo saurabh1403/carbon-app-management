@@ -1,7 +1,7 @@
 
 #include "BridgeInterface.h"
-
-
+#include <io.h>
+#include <fcntl.h>
 
 //mSizeBuff is the number of objects which is to be read. so, its basically the number of bytes to read
 static bool BIRawReadTry(BridgeInterface *obj, byte * buffer, int mSizeBuff)
@@ -77,12 +77,13 @@ DWORD WINAPI BridgeInterface::listenerThread(LPVOID lpParam)
 
 		while(obj->shouldContinue && !isDataRead)
 		{
-			buffer = new char[pktMeta.size];
+			buffer = new char[pktMeta.size + 1];
 			if(!BIRawReadTry(obj,(byte *)buffer, pktMeta.size))
 			{
 				delete [] buffer;
 				return 0;
 			}
+			buffer[pktMeta.size] = '\0';
 			isDataRead = true;
 		}
 
@@ -107,6 +108,13 @@ DWORD WINAPI BridgeInterface::listenerThread(LPVOID lpParam)
 
 void BridgeInterface::insertInQueue(const BIPacket &inPkt)
 {
+	if(queueSelectorFn == NULL)
+	{
+		//put in Async queue by default
+		asyncQueue.push(inPkt);
+		return;
+	}
+
 	int inPktType = (*queueSelectorFn)(inPkt.buffer);
 
 	switch(inPktType)
@@ -128,6 +136,7 @@ void BridgeInterface::insertInQueue(const BIPacket &inPkt)
 
 BridgeInterface::BridgeInterface(msgQueueSelector inQueueSelectorFn):queueSelectorFn(inQueueSelectorFn)
 {
+	InitializeCriticalSection(&carbonBridgeCritSec);
 	readerThread = NULL;
 	shouldContinue = false;
 }
@@ -147,6 +156,9 @@ BridgeInterface::~BridgeInterface()
 BridgeInterfaceStatus BridgeInterface::initBI()
 {
 	EnterCriticalSection(&carbonBridgeCritSec);
+
+	_setmode( _fileno( stdin ), _O_BINARY );
+	_setmode( _fileno( stdout ), _O_BINARY );
 
 	shouldContinue = true;
 
@@ -254,4 +266,6 @@ BridgeInterfaceStatus BridgeInterface::closeBI()
 		CloseHandle(readerThread);
 	}
 	readerThread = NULL;
+
+	return kBridgeInterfaceErrorNone;
 }

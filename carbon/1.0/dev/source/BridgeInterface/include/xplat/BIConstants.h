@@ -7,7 +7,7 @@
 #ifdef WIN32
 
 #define CUSTOMAPI WINAPI
-#include "windows.h"
+#include <windows.h>
 
 #else
 
