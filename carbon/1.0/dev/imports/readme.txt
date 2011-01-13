@@ -21,6 +21,6 @@ Crypto++:
 
 Sqlite: 
 
-1. This is the com[plete source code of sqlite. Include all .h and .c files except shell.c to get the sqlite functionalities. 
+1. This is the complete source code of sqlite. Include all .h and .c files except shell.c to get the sqlite functionalities. 
 
 
