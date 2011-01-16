@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -176,10 +176,30 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="..\..\..\source\IDAppNative\source\xplat\main.cpp"
+			<Filter
+				Name="xplat"
 				>
-			</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppNative.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppNativeJob.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppSession.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\main.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="win"
+				>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -193,6 +213,34 @@
 					RelativePath="..\..\..\source\BridgeInterface\include\xplat\BridgeInterface.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppNative.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppSession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\NativeJob.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\NativeSession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\SessionMgr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\ThreadPoolManager.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="win"
+				>
 			</Filter>
 		</Filter>
 		<Filter

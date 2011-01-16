@@ -3,7 +3,6 @@
 
 #include "iostream"
 
-
 #ifdef WIN32
 
 #define CUSTOMAPI WINAPI
