@@ -5,7 +5,10 @@
 
 #ifdef WIN32
 #include <shlwapi.h>
+#include<Shlobj.h>
 #pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib,"Shell32.lib")
+
 #endif
 namespace carbonUtilities
 {
@@ -20,6 +23,26 @@ namespace carbonUtilities
 
 //	bool readFromFile(const string &infilePath, char *outArr);
 
+#ifdef WIN32
+	bool cuGenerateGUID(std::string &outGuid);
+#endif
+
+	bool cuGenerateGUID(OSString &outGuid);
+
+	//returns temp folder path
+	bool cuGetTempPath(OSString &outStr);
+
+	bool cuCreateTempFolder(OSString &outPath, OSString &errMsg);
+
+	bool cuConvertStringToOSString(const std::string inStr, OSString &outStr);
+	bool cuConvertOSStringToString(const OSString &inStr, std::string &outStr);
+
+	bool cuCreateDirectory(const OSString &path);
+	bool cuDeleteDirectory(const OSString &path);
+
+	bool cuDeleteDirectoryContent(const OSString &dirPath);
+
+	unsigned int cuGetNumberOfProcessors();
 
 }
 

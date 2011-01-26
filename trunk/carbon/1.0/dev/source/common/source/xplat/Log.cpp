@@ -1,7 +1,7 @@
 
 #include "Log.h"
 
-LoggerPtr carbonLogger::_logger = NULL;
+CARBONLOG_CLASS_PTR carbonLogger::_logger = NULL;
 
 using namespace carbonLog;
 
@@ -30,7 +30,7 @@ carbonLogger::~carbonLogger()
 
 }
 
-LoggerPtr carbonLogger::getLoggerPtr()
+CARBONLOG_CLASS_PTR carbonLogger::getLoggerPtr()
 {
 	if(_logger == NULL)
 		carbonLogger::init();
@@ -56,6 +56,7 @@ void carbonLogger::setLogLevel(carbonLogLevel logLevel)
 
 #endif
 
+#if USE_LOG_4CXX_LIBRARY
 	if(traceFileExists)
 	{
 		_logger->setLevel(log4cxx::Level::getTrace());
@@ -86,15 +87,15 @@ void carbonLogger::setLogLevel(carbonLogLevel logLevel)
 			break;
 
 		}
-
 	}
-
+#endif
 }
 
 
 bool carbonLogger::init(carbonLog::carbonLogLevel logLevel, const OSString &logModuleName, 
 						const OSString &logPath, const OSString &logFileName)
 {
+#if USE_LOG_4CXX_LIBRARY
 	try
 	{
 		_logger = Logger::getLogger(logModuleName);
@@ -115,8 +116,12 @@ bool carbonLogger::init(carbonLog::carbonLogLevel logLevel, const OSString &logM
 	}
 	catch(Exception&)
 	{
-		//take some action and make a default basic log
+		//TODO: take some action and make a default basic log
 	}
+
+#else
+
+#endif
 
 	return true;
 }
