@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib crypt_static_lib.lib"
+				AdditionalDependencies="crypt_static_lib.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
@@ -121,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;$(NOINHERIT)"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;;$(NOINHERIT)"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="log4cxx.lib crypt_static_lib.lib"
+				AdditionalDependencies="crypt_static_lib.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;"
@@ -260,11 +260,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\configurations\cpp\carbonConfigurations.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\common\include\xplat\CarbonSteganography.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\common\include\xplat\CipherConfigurations.h"
+					RelativePath="..\..\..\configurations\cpp\CipherConfigurations.h"
 					>
 				</File>
 				<File

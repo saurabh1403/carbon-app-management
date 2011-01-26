@@ -2,6 +2,7 @@
 #pragma once
 
 #include <string>
+#include "carbonConfigurations.h"
 
 #ifdef WIN32
 

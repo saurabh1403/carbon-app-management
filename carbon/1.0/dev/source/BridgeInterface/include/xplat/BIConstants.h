@@ -28,7 +28,7 @@ typedef enum pktType
 struct BIPacket
 {
 	unsigned short int pktSize;
-	std::string buffer;		//this will be simply a utf string 
+	std::string buffer;		//this will be simply a utf8 string 
 
 	BIPacket():buffer(""), pktSize(0)
 	{

@@ -157,6 +157,9 @@ BridgeInterfaceStatus BridgeInterface::initBI()
 {
 	EnterCriticalSection(&carbonBridgeCritSec);
 
+	if(readerThread != NULL)
+		return kBridgeInterfaceErrorPipeAlreadyInitialized;
+
 	_setmode( _fileno( stdin ), _O_BINARY );
 	_setmode( _fileno( stdout ), _O_BINARY );
 

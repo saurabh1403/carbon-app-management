@@ -29,3 +29,20 @@ void processJob(const std::string &jobMsg, std::string &resStr)
 }
 
 
+void startPackageSession(const std::string &inMsg, std::string &outMsg)
+{
+
+}
+
+void closePackageSession(const std::string &inMsg, std::string &outMsg)
+{
+
+
+}
+
+void getAvailablePackages(const std::string &inMsg, std::string &outMsg)
+{
+
+}
+
+

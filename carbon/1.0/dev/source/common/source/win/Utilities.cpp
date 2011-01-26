@@ -29,10 +29,11 @@ bool getIntFromCharArray(int &outVal, const char *inArr,unsigned int start_index
 
 	outVal = atoi(charBuf.c_str());
 
+	return true;
+
 }
 
 
-	
 bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count)
 {
 	if(outArr == NULL)
@@ -40,7 +41,7 @@ bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count
 
 	char val[20];
 	itoa(i, val, 10);
-	int len_val = strlen(val);
+	unsigned int len_val = strlen(val);
 
 	if(chars_count !=0 && chars_count > len_val)
 	{
@@ -59,8 +60,6 @@ bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count
 
 	return true;
 }
-
-
 
 
 bool utilCreateFileWithData( const void *data, int length, OSString &filePath )
@@ -87,5 +86,147 @@ bool utilCreateFileWithData( const void *data, int length, OSString &filePath )
 	return true;
 }
 
+
+bool cuGenerateGUID(std::string &outGuid)
+{
+	OSString tGUID;
+	if(!cuGenerateGUID(tGUID))
+		return false;
+
+	if(!cuConvertOSStringToString(tGUID, outGuid))
+		return false;
+
+	return true;
+
+}
+
+bool cuGenerateGUID(OSString &outGuid)
+{
+	long lRetVal = 0;
+	GUID *pguid = 0x00;
+	pguid = new GUID;
+	lRetVal=CoCreateGuid(pguid);
+	HRESULT hr = NOERROR;
+	OLECHAR szCLSID[MAX_PATH];
+    hr = StringFromGUID2((*pguid), szCLSID, MAX_PATH);
+	delete pguid;
+	outGuid = szCLSID;
+	return true;
+}
+
+bool cuConvertStringToOSString(const std::string inStr, OSString &outStr)
+{
+	int length= MultiByteToWideChar(CP_UTF8,0,inStr.c_str(),-1,NULL,NULL);
+	TCHAR * temp = (TCHAR*)malloc(sizeof(TCHAR) * (length+1));
+	if(!temp)
+	{
+		return false;
+	}
+
+	if(MultiByteToWideChar(CP_UTF8,0,inStr.c_str(),-1,temp,length)<=0)
+	{
+		free(temp);
+		return false;
+	}
+	temp[length] = L'\0';
+	outStr.assign(temp);
+	free(temp);
+	return true;
+}
+
+
+bool cuConvertOSStringToString(const OSString &inStr, std::string &outStr)
+{
+	int len=WideCharToMultiByte(CP_UTF8,0,inStr.c_str(),-1,NULL,NULL,NULL,NULL);
+	char* path =new char[len+1];
+	if(WideCharToMultiByte(CP_UTF8,0,inStr.c_str(),-1,path,len+1,NULL,NULL)<=0)
+	{
+		delete [] path;
+		return false;
+	}
+
+	outStr.assign(path);
+	delete [] path;
+	return true;
+}
+
+bool cuGetTempPath(OSString &outStr)
+{
+	OSChar *tempFolder = new OSChar[1024];
+	GetTempPath(1024,tempFolder);
+	OSString temp;
+	outStr.assign(tempFolder);
+	delete []tempFolder;
+	return true;
+}
+
+
+bool cuCreateTempFolder(OSString &outPath, OSString &errMsg)
+{
+	cuGetTempPath(outPath);
+
+	OSString guid;
+	if(!cuGenerateGUID(guid))
+		return false;
+
+	outPath.append(guid);
+    int retVal=SHCreateDirectoryEx(NULL,outPath.c_str(),NULL);
+	if((retVal==ERROR_SUCCESS )||(retVal== ERROR_ALREADY_EXISTS)|| (retVal==ERROR_FILE_EXISTS))
+	{
+			//return true;
+	}
+	else
+    {
+		errMsg = OSConst("Unable to create the temporary directory");
+		return false;
+    }
+
+	if(!cuCreateDirectory(outPath))
+		return false;
+
+	return true;
+
+}
+
+
+bool cuCreateDirectory(const OSString &path)
+{
+	int retVal=0;
+	retVal=SHCreateDirectoryEx(NULL,path.c_str(),NULL);
+	if((retVal==ERROR_SUCCESS )||(retVal== ERROR_ALREADY_EXISTS)|| (retVal==ERROR_FILE_EXISTS))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool cuDeleteDirectory(const OSString &path)
+{
+
+	return true;
+}
+
+
+bool cuDeleteDirectoryContent(const OSString &dirPath)
+{
+
+	return true;
+}
+
+
+unsigned int cuGetNumberOfProcessors()
+{
+	LPSYSTEM_INFO sys_Info;
+
+	GetSystemInfo(sys_Info);
+
+	return sys_Info->dwNumberOfProcessors;
+}
 
 }

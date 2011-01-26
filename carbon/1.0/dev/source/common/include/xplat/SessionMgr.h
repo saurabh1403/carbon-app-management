@@ -37,12 +37,11 @@ public:
 };
 
 
-
-
 template <class T>
 SessionMgr<T>::SessionMgr():activeSession("")
 {
 }
+
 
 template <class T>
 SessionMgr<T>::~SessionMgr()
@@ -86,10 +85,10 @@ void SessionMgr<T>::removeAllSession()
 template <class T>
 bool SessionMgr<T>::createSession(std::string sessionId, const T* sessionPtr)
 {
-
 	if(_sessions.find(sessionId) != _sessions.end())
 	{
 		_sessions.insert(sessionPtr);
+		activeSession = sessionId;
 		return true;
 	}
 

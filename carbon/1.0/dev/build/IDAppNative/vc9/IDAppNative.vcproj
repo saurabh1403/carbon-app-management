@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BridgeInterface.lib"
+				AdditionalDependencies="BridgeInterface.lib log4cxx.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;;&quot;$SolutionDir\..\..\..\..\target\$(ConfigurationName)\win&quot;"
 				GenerateDebugInformation="true"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BridgeInterface.lib"
+				AdditionalDependencies="BridgeInterface.lib log4cxx.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;;&quot;$SolutionDir\..\..\..\..\target\$(ConfigurationName)\win&quot;"
 				GenerateDebugInformation="true"
@@ -180,6 +180,10 @@
 				Name="xplat"
 				>
 				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppGlobalContext.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppNative.cpp"
 					>
 				</File>
@@ -192,13 +196,29 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\IDAppNative\source\xplat\main.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\TempManager.cpp"
 					>
 				</File>
 			</Filter>
 			<Filter
 				Name="win"
 				>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\win\ThreadPool.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\win\Utilities.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -214,11 +234,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppGlobalContext.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppNative.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppSession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Log.h"
 					>
 				</File>
 				<File
@@ -234,7 +262,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\IDAppNative\include\xplat\ThreadPoolManager.h"
+					RelativePath="..\..\..\source\common\include\xplat\TempManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\ThreadPool.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Utilities.h"
 					>
 				</File>
 			</Filter>
