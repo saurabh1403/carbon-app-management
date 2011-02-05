@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -106,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -192,10 +192,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

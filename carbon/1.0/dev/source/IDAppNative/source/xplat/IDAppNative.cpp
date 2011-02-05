@@ -5,16 +5,23 @@
 
 void processJob(const std::string &jobMsg, std::string &resStr)
 {
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
 	//get the session id. if it is null or empty, process it itself. else pass it to process to the asked session
-	IDAppNativeJob *obj = new IDAppNativeJob();
-	obj->initJob(jobMsg);
-	if(obj->isJobForSession)
+	IDAppNativeJob obj;
+	obj.initJob(jobMsg);
+	if(obj.isJobForSession)
 	{
-		SessionMgr<IDAppSession>::getInstance().getSessionWithId(obj->sessionId)->processJob(obj, resStr);
+		PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(obj.sessionId);
+		if(pkgSession != NULL)
+			pkgSession->processJob(obj, resStr);
+		else
+			CARBONLOG_ERROR(logger, "No Session exists for the session id "<<obj.sessionId);
 	}
 
 	else
 	{
+		IDAppGlobalContext::getInstance().executeFunctionWithParameters(obj, resStr);
 
 		//here do all the work. Cases are:
 
@@ -44,5 +51,4 @@ void getAvailablePackages(const std::string &inMsg, std::string &outMsg)
 {
 
 }
-
 

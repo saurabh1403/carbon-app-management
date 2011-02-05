@@ -4,6 +4,7 @@
 #include "BridgeInterface.h"
 #include "BIConstants.h"
 #include "TempManager.h"
+#include "IDAppGlobalContext.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
 	//many things to do:
 	//1. initialize the global context
 
-	test_tempMgr();
+//	test_tempMgr();
 
 	BridgeInterface biObj;
 
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
 	{
 		if(biObj.readAsyncPkt(pkt) == kBridgeInterfaceErrorNone)
 		{
+//			cout<<"buffer is "<<pkt.buffer;
 			biObj.writePkt(pkt);
 		}
 	}
@@ -42,6 +44,14 @@ int main(int argc, char *argv[])
 	cout<<"hello world";
 
 	biObj.closeBI();
+
+	int i;
+	cin>>i;
+
+
+//	IDAppGlobalContext::getInstance().initIDApp();
+
+//	IDAppGlobalContext::getInstance().closeIDApp();
 
 	return 0;
 

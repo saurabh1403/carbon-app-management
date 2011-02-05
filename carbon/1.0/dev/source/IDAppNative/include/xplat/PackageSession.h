@@ -6,7 +6,7 @@
 #include "NativeSession.h"
 
 //TODO: there must be a default constructor
-class IDAppSession:public NativeSession
+class PackageSession:public NativeSession
 {
 
 private:
@@ -20,17 +20,17 @@ private:
 
 public:
 
-	IDAppSession()
+	PackageSession()
 	{
 
 	}
 
-	~IDAppSession()
+	~PackageSession()
 	{
 
 	}
 
-	bool processJob(IDAppNativeJob *job, std::string resStr);
+	bool processJob(const IDAppNativeJob &job, std::string resStr);
 	bool initSession();
 	bool closeSession();
 
