@@ -77,7 +77,7 @@ namespace carbonLog{
 	const OSString DefaultLogModuleName = OSConst("carbon");
 	const OSString DefaultLogPath = getTempPath();
 	const OSString DefaultLogFileName = OSConst("carbon.log");
-	const carbonLogLevel DefaultLogLevel = DEFAULT_LOG_LEVEL;
+	const carbonLogLevel DefaultLogLevel = LOG_DEBUG;
 
 	const OSString LogLevelCheckFileName = OSConst("carbon_trace.txt");		//keep it txt file so that user don't get confused about how to create it. 
 

@@ -26,8 +26,12 @@ private:
 
 public:
 
+	IDAppNativeJob();
+
+	string callIdentifier;		//unique identifier to identify the job request
 	string targetObject;
 	string sessionId;
+	string targetArgument;
 	bool isJobForSession;
 
 	//parses the xml and populates the parameters

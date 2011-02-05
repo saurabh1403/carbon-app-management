@@ -105,7 +105,7 @@ bool carbonLogger::init(carbonLog::carbonLogLevel logLevel, const OSString &logM
 		std::string patternstring = "[%d{dd MMM yyyy HH:mm:ss}] %c [%-5p] - %m%n";
 
 		log4cxx::LayoutPtr patLay(new log4cxx::PatternLayout(log4cxx::helpers::Transcoder::decode(patternstring.c_str())));
-		log4cxx::FileAppenderPtr appender(new log4cxx::FileAppender(patLay, logfile, true, true, 1024));		//make a check to disable buffering
+		log4cxx::FileAppenderPtr appender(new log4cxx::FileAppender(patLay, logfile, true, false, 1024));		//make a check to disable buffering
 
 		_logger->setLevel(log4cxx::Level::getTrace());
 		_logger->removeAllAppenders();

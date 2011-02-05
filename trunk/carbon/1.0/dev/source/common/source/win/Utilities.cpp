@@ -222,11 +222,11 @@ bool cuDeleteDirectoryContent(const OSString &dirPath)
 
 unsigned int cuGetNumberOfProcessors()
 {
-	LPSYSTEM_INFO sys_Info;
+	SYSTEM_INFO sys_Info;
 
-	GetSystemInfo(sys_Info);
+	GetSystemInfo(&sys_Info);
 
-	return sys_Info->dwNumberOfProcessors;
+	return sys_Info.dwNumberOfProcessors;
 }
 
 }

@@ -192,15 +192,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\IDAppNative\source\xplat\IDAppSession.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\source\IDAppNative\source\xplat\main.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\source\xplat\PackageSession.cpp"
 					>
 				</File>
 				<File
@@ -242,10 +242,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppSession.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\source\common\include\xplat\Log.h"
 					>
 				</File>
@@ -255,6 +251,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\source\common\include\xplat\NativeSession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\PackageSession.h"
 					>
 				</File>
 				<File
