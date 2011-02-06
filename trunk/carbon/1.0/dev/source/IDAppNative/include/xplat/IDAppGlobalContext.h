@@ -27,6 +27,7 @@ private:
 	ThreadPool tPool;
 
 	bool isIDAppInitialized;
+	
 	std::map<std::string, msgTarget> targetFnMap;
 
 public:
@@ -41,6 +42,13 @@ public:
 	bool closeIDApp();
 
 	void executeFunctionWithParameters(const IDAppNativeJob &inJob, std::string &outStr);
+
+	void handleIDAppCloseSignal();
+
+	BridgeInterfaceStatus writePktToBi(const std::string &pktMsg);
+
+public:
+	volatile bool shouldContinue;
 
 };
 

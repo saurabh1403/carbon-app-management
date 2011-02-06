@@ -38,17 +38,26 @@ void processJob(const std::string &jobMsg, std::string &resStr)
 
 void startPackageSession(const std::string &inMsg, std::string &outMsg)
 {
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	outMsg = "startPackageSession function routine"; 
+	CARBONLOG_TRACE(logger,"in startPackageSession routine");
 
 }
 
 void closePackageSession(const std::string &inMsg, std::string &outMsg)
 {
-
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	outMsg = "closePackageSession function routine"; 
+	CARBONLOG_TRACE(logger,"in closePackageSession routine");
+	IDAppGlobalContext::getInstance().handleIDAppCloseSignal();
 
 }
 
 void getAvailablePackages(const std::string &inMsg, std::string &outMsg)
 {
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	outMsg = "getAvailablePackages function routine"; 
+	CARBONLOG_TRACE(logger,"in getAvailablePackages routine");
 
 }
 

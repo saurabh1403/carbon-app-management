@@ -17,21 +17,35 @@ ThreadPool::~ThreadPool()
 }
 
 
-bool ThreadPool::initWithThreads(unsigned int nthreads)
+bool ThreadPool::initWithThreads()
 {
-	//in case, previously threads are opened.
-	closeAllThreads();
-
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
-
 	unsigned int nCores = carbonUtilities::cuGetNumberOfProcessors();
-	nthreads = (nthreads > nCores) ? nCores: nthreads;
-
-	//fallback in case of any error.
-	nthreads = (nthreads <=0)? 2: nthreads;
 
 	shouldContinue = true;
-	CARBONLOG_INFO(logger, "[initWithThreads] : Number of threads to spawn are "<<nthreads);
+	CARBONLOG_INFO(logger, "[initWithThreads] : Number of threads to spawn are "<<nCores);
+
+	return initWithThreads(nCores);
+
+}
+
+bool ThreadPool::initWithThreads(unsigned int nthreads)
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	if(nthreads > 10)
+	{
+		CARBONLOG_ERROR(logger, "[initWithThreads] : Too many threads asked to start - " <<nthreads);
+		return false;
+	}
+
+	if(nthreads == 0)
+	{
+		CARBONLOG_WARN(logger, "[initWithThreads] : 0 threads asked to spawn");
+		return true;
+	}
+
+	//in case, previously threads are opened.
+	closeAllThreads();
 
 	m_hThreads = new HANDLE[nthreads];
 	for(unsigned int i =0; i< nthreads ;i++)
@@ -60,7 +74,7 @@ bool ThreadPool::closeAllThreads()
 	//wait for all threads closure
 	if(m_hThreads == NULL || nThreadsRunning == 0)
 	{
-		CARBONLOG_INFO(logger, "[closeAllThreads] : There is no thread to close. ");
+		CARBONLOG_TRACE(logger, "[closeAllThreads] : There is no thread to close. ");
 		return true;
 	}
 
@@ -93,47 +107,32 @@ bool ThreadPool::getJobMsg(std::string &jobMsg)
 
 }
 
-void ThreadPool::writeJobOutput(const std::string &outStr)
+bool ThreadPool::writeJobOutput(const std::string &outStr)
 {
-	//this check is provided so that any empty length message should not be sent. 
-	//It is not necessary that every job should return some message. 
-	//Either the job can sent the msg itself or there is no need to send any msg. The design is flexible.
-
-	if(outStr.empty())
-		return;
-
-	BIPacket pkt;
-	pkt.buffer = outStr;
-	pkt.pktSize = outStr.length();
-
-	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
-	if(IDAppGlobalContext::getInstance().getBIObject().writePkt(pkt) != kBridgeInterfaceErrorNone)
-	{
-		CARBONLOG_ERROR(logger, "[writeJobOutput] : Failed to send packet to UI");
-	}
-
+	return (IDAppGlobalContext::getInstance().writePktToBi(outStr) == kBridgeInterfaceErrorNone);
 }
 
 
 DWORD WINAPI ThreadPool::WorkerThread(LPVOID lpParam)
 {
 	ThreadPool *obj = (ThreadPool *)lpParam;
-	std::string jobMsg, jobOutput;
+
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	CARBONLOG_INFO(logger, "[WorkerThread] : starting worker thread now..");
 
 	while(obj->shouldContinue)
 	{
+		std::string jobMsg, jobOutput;
 		if(obj->getJobMsg(jobMsg))
 		{
 			CARBONLOG_DEBUG(logger, "[WorkerThread] : Processing job ..");
 			processJob(jobMsg,jobOutput);
-			obj->writeJobOutput(jobOutput);
+			if(!obj->writeJobOutput(jobOutput))
+				CARBONLOG_ERROR(logger, "[WorkerThread] : Failed to write packet to BI");
 		}
 
 		else
 			Sleep(10);
-
 	}
 
 	CARBONLOG_INFO(logger, "[WorkerThread] : exiting worker thread now..");

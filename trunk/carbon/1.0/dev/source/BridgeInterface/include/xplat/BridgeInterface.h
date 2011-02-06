@@ -5,6 +5,12 @@
 #include "BIConstants.h"
 #include "MsgQueue.h"
 
+#define DEBUG_MODE_LOGGING_ENABLE		TRUE
+
+#define DISALLOW_COPY_AND_ASSIGN(Type) \
+  Type(const Type&);               \
+  void operator=(const Type&)
+
 class MsgQueue;
 
 //TODO: add the error string the class for storing all the error messages. 
@@ -19,11 +25,12 @@ private:
 	msgQueueSelector queueSelectorFn;
 
 #ifdef WIN32
-	CRITICAL_SECTION carbonBridgeCritSec;
+	mutable CRITICAL_SECTION carbonBridgeCritSec;
 	static DWORD WINAPI listenerThread(LPVOID lpParam);
 #endif
 
 	void insertInQueue(const BIPacket &inPkt);
+	DISALLOW_COPY_AND_ASSIGN(BridgeInterface);
 
 public:
 
