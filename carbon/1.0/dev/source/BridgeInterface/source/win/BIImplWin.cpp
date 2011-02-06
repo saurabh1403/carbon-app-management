@@ -2,6 +2,19 @@
 #include "BridgeInterface.h"
 #include <io.h>
 #include <fcntl.h>
+#include <fstream>
+
+#if DEBUG_MODE_LOGGING_ENABLE == TRUE
+
+std::fstream _fWrite("D:\\carbon_bi_log.log", std::ios::out);
+#define writeLog(msg)		_fWrite.write(msg, sizeof(msg));	\
+	_fWrite.flush();
+
+#else
+
+#define writeLog(msg)			
+
+#endif
 
 //mSizeBuff is the number of objects which is to be read. so, its basically the number of bytes to read
 static bool BIRawReadTry(BridgeInterface *obj, byte * buffer, int mSizeBuff)
@@ -143,13 +156,7 @@ BridgeInterface::BridgeInterface(msgQueueSelector inQueueSelectorFn):queueSelect
 
 BridgeInterface::~BridgeInterface()
 {
-	if(readerThread)
-	{
-		shouldContinue = false;
-		WaitForSingleObject(readerThread, INFINITE);
-		CloseHandle(readerThread);
-	}
-	readerThread = NULL;
+	closeBI();
 
 }
 
@@ -158,7 +165,10 @@ BridgeInterfaceStatus BridgeInterface::initBI()
 	EnterCriticalSection(&carbonBridgeCritSec);
 
 	if(readerThread != NULL)
+	{
+		LeaveCriticalSection(&carbonBridgeCritSec);
 		return kBridgeInterfaceErrorPipeAlreadyInitialized;
+	}
 
 	_setmode( _fileno( stdin ), _O_BINARY );
 	_setmode( _fileno( stdout ), _O_BINARY );
@@ -179,6 +189,8 @@ BridgeInterfaceStatus BridgeInterface::initBI()
 		return kBridgeInterfaceErrorInitChannel;
 	}
 
+	writeLog("bi got init properly\n");
+	LeaveCriticalSection(&carbonBridgeCritSec);
 	return kBridgeInterfaceErrorNone;
 }
 
@@ -204,7 +216,7 @@ BridgeInterfaceStatus BridgeInterface::readSyncPkt(BIPacket &outPkt)
 	return kBridgeInterfaceErrorNone;
 }
 
-static bool BIRawWrite(BridgeInterface *obj,const byte * buffer, int mBufSize)
+static BridgeInterfaceStatus BIRawWrite(BridgeInterface *obj,const byte * buffer, int mBufSize)
 {
 	int mByteWritten = 0;
 	int nCount = 0;
@@ -212,21 +224,22 @@ static bool BIRawWrite(BridgeInterface *obj,const byte * buffer, int mBufSize)
 	{
 		int dwSent;
 
-//		BOOL bOK = WriteFile(hPipe, buffer + mByteWritten, mBufSize, &dwSent, NULL);
 		dwSent = fwrite(buffer + mByteWritten, sizeof(byte), mBufSize, stdout);
 		fflush(stdout);
 		if(ferror( stdout )|| (dwSent > mBufSize))
 		{
-			return false;
+			writeLog("pipe corrupt for writing\n");
+			return kBridgeInterfaceErrorPipeWriteCorrupt;
 		}
 
 		if(dwSent < mBufSize)
 		{
 			mByteWritten += dwSent;
 			mBufSize -= dwSent;
-			if(nCount > 500)
+			if(nCount > 5000)
 			{
-				return false;
+				writeLog("Enough tries to write. 5000 +. Failed to write\n");
+				return kBridgeInterfaceErrorUnableToSendData;
 			}
 			nCount++;
 			Sleep(10);
@@ -239,32 +252,34 @@ static bool BIRawWrite(BridgeInterface *obj,const byte * buffer, int mBufSize)
 }
 
 
-
 BridgeInterfaceStatus BridgeInterface::writePkt(const BIPacket &inPkt)
 {
+//	writeLog("before entering crit section\n");
+
 	EnterCriticalSection(&carbonBridgeCritSec);
+	writeLog("Entered critical section for writing pkt\n");
 	Sleep(1);						//Adding a delay of 1 ms to prevent flooding of pipe with data
 
 	//TODO: construct the whole logic for constructing the sending buffer string with length prepended
 	std::string bufToSend;
 	bufToSend = inPkt.buffer;
 
-	if(!BIRawWrite(this, (byte *)bufToSend.c_str(), bufToSend.length()))
-	{
-		LeaveCriticalSection(&carbonBridgeCritSec);
-		return kBridgeInterfaceErrorUnableToSendData;
-	}
+	BridgeInterfaceStatus biStatus = BIRawWrite(this, (byte *)bufToSend.c_str(), bufToSend.length());
+	writeLog("exiting crit section for writing. successful write\n");
 
 	LeaveCriticalSection(&carbonBridgeCritSec);
-	return kBridgeInterfaceErrorNone;
+
+	return biStatus;
 }
 
-
+//TODO: really optimize it. terminate thread is so ugly. 
+// try to use async stdin read using ReadFile api of windows. 
 BridgeInterfaceStatus BridgeInterface::closeBI()
 {
 	if(readerThread)
 	{
 		shouldContinue = false;
+		TerminateThread(readerThread, 0);
 		WaitForSingleObject(readerThread, INFINITE);
 		CloseHandle(readerThread);
 	}

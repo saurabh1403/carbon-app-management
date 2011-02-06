@@ -205,7 +205,7 @@ bool cuCreateDirectory(const OSString &path)
 	return true;
 }
 
-
+//TODO:
 bool cuDeleteDirectory(const OSString &path)
 {
 
@@ -213,6 +213,7 @@ bool cuDeleteDirectory(const OSString &path)
 }
 
 
+//TODO: 
 bool cuDeleteDirectoryContent(const OSString &dirPath)
 {
 

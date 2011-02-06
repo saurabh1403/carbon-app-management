@@ -22,7 +22,8 @@ public:
 	static DWORD WINAPI WorkerThread(LPVOID lpParam);
 #endif
 
-	bool initWithThreads(unsigned int nthreads = 1);
+	bool ThreadPool::initWithThreads();
+	bool initWithThreads(unsigned int nthreads);
 
 	//a synchronous blocking call.
 	bool closeAllThreads();
@@ -30,7 +31,7 @@ public:
 	//logic is here to fetch the proper job from proper queue. if job present, it will return true else false
 	bool getJobMsg(std::string &jobMsg);
 
-	void writeJobOutput(const std::string &outStr);
+	bool writeJobOutput(const std::string &outStr);
 
 };
 
