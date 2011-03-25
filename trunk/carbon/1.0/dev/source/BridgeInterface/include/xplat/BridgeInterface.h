@@ -5,7 +5,9 @@
 #include "BIConstants.h"
 #include "MsgQueue.h"
 
-#define DEBUG_MODE_LOGGING_ENABLE		TRUE
+//TODO: disable this logging.
+#define DEBUG_MODE_LOGGING_ENABLE		FALSE
+#define DEBUG_FILE_PATH				"D:\\carbon_bi_log.log"
 
 #define DISALLOW_COPY_AND_ASSIGN(Type) \
   Type(const Type&);               \

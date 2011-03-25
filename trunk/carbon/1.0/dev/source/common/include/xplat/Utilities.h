@@ -2,12 +2,13 @@
 #pragma once
 
 #include "Constants.h"
+#include "Log.h"
 
 #ifdef WIN32
 #include <shlwapi.h>
 #include<Shlobj.h>
-#pragma comment(lib,"shlwapi.lib")
-#pragma comment(lib,"Shell32.lib")
+//#pragma comment(lib,"shlwapi.lib")
+//#pragma comment(lib,"Shell32.lib")
 
 #endif
 namespace carbonUtilities
@@ -43,6 +44,10 @@ namespace carbonUtilities
 	bool cuDeleteDirectoryContent(const OSString &dirPath);
 
 	unsigned int cuGetNumberOfProcessors();
+
+	bool getCarbonCommonFolderPath(OSString &outPath);
+
+	bool testfn(aVectorOsStr temp);
 
 }
 

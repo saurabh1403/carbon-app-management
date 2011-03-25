@@ -6,7 +6,7 @@
 
 #if DEBUG_MODE_LOGGING_ENABLE == TRUE
 
-std::fstream _fWrite("D:\\carbon_bi_log.log", std::ios::out);
+std::fstream _fWrite(DEBUG_FILE_PATH, std::ios::out);
 #define writeLog(msg)		_fWrite.write(msg, sizeof(msg));	\
 	_fWrite.flush();
 

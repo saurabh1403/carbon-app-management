@@ -11,10 +11,6 @@
 
 #include "sqlite3.h"
 
-typedef std::map<OSString, OSString> aMapOsStr;
-typedef std::map<std::string,std::string> aMapStr;
-typedef std::vector<std::string> aVectorStr;
-typedef std::vector<OSString> aVectorOsStr;
 
 static const int aBusyTimeoutMs = 2000;
 using namespace std;
@@ -28,8 +24,11 @@ public:
 	DMM();
 	~DMM();
 
-	//TODO: make it a wstring for the path
 	int init(const string &dbPath);
+
+#ifdef WIN32
+	int init(const OSString &dbPath);
+#endif
 
 	virtual bool insertOrReplaceQuery(const aMapStr &keyValue, const string &tableName);
 	virtual bool insertQuery(const aMapStr &keyValue, const string &tableName);
@@ -54,11 +53,12 @@ public:
 	int commit();
 	//TODO: add functions for beginning and closing transactions
 
+	string errMsg;
+
 private:
 
 	sqlite3 *db;
 	OSString _dbPath;
-	string errMsg;
 
 	bool prepareAndInsertQuery(const aMapStr &keyValue, const string &tableName, const string &insertString);
 	bool prepareAndInsertQuery(const aVectorStr &values, const string &tableName, const string &insertString);

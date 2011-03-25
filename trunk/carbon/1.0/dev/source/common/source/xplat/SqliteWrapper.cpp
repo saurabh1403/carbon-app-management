@@ -17,6 +17,30 @@ DMM::~DMM()
 		dbClose();
 }
 
+//TODO:
+#ifdef WIN32
+int DMM::init(const OSString &dbPath)
+{
+	std::string sDbPath;
+
+	// DONOT use utilities function. This class should remain very generic
+	int len=WideCharToMultiByte(CP_UTF8,0,dbPath.c_str(),-1,NULL,NULL,NULL,NULL);
+	char* path =new char[len+1];
+	if(WideCharToMultiByte(CP_UTF8,0,dbPath.c_str(),-1,path,len+1,NULL,NULL)<=0)
+	{
+		delete [] path;
+		return false;
+	}
+
+	sDbPath.assign(path);
+	delete [] path;
+	
+	return init(sDbPath);
+
+}
+
+#endif
+
 int DMM::init(const string &dbPath)
 {
 	// Open the database.
@@ -201,7 +225,6 @@ bool DMM::deleteRecordquery(const aMapStr &keyValue, const string &tableName, co
 
 bool DMM::updateQueryWithEqualPredicate(const aMapStr &keyValuesToSet, const aMapStr &conditionPair, const string &tableName, const string &predicate)
 {
-
 
 	string query;
 	string condition_str, field_str;

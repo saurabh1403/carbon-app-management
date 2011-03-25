@@ -115,6 +115,7 @@ bool ThreadPool::writeJobOutput(const std::string &outStr)
 
 DWORD WINAPI ThreadPool::WorkerThread(LPVOID lpParam)
 {
+	CoInitialize(NULL);
 	ThreadPool *obj = (ThreadPool *)lpParam;
 
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
@@ -136,6 +137,7 @@ DWORD WINAPI ThreadPool::WorkerThread(LPVOID lpParam)
 	}
 
 	CARBONLOG_INFO(logger, "[WorkerThread] : exiting worker thread now..");
+	CoUninitialize();
 
 	return 0;
 

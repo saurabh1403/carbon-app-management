@@ -29,7 +29,7 @@ public:
 
 	static SessionMgr<T> &getInstance(void);
 	void removeAllSession();
-	bool createSession(std::string, const T*);
+	bool createSession(std::string, T*);
 
 	//TODO: it will set the session as active one for the given id
 	bool setSessionAsActive(std::string);
@@ -83,11 +83,11 @@ void SessionMgr<T>::removeAllSession()
 }
 
 template <class T>
-bool SessionMgr<T>::createSession(std::string sessionId, const T* sessionPtr)
+bool SessionMgr<T>::createSession(std::string sessionId, T* sessionPtr)
 {
 	if(_sessions.find(sessionId) != _sessions.end())
 	{
-		_sessions.insert(sessionPtr);
+		_sessions[sessionId] = sessionPtr;
 		activeSession = sessionId;
 		return true;
 	}
