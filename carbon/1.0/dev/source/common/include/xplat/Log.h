@@ -16,9 +16,9 @@ class carbonDefaultLogger
 
 };
 
-#if USE_LOG_4CXX_LIBRARY
-
 #pragma comment(lib,"log4cxx.lib")
+
+#if USE_LOG_4CXX_LIBRARY
 
 	#include "log4cxx/logger.h"
 	#include "log4cxx/basicconfigurator.h"
@@ -49,6 +49,7 @@ using namespace log4cxx::helpers;
 #define	CARBONLOG_TRACE(logger, message)
 #define	CARBONLOG_WARN(logger, message)
 #define	CARBONLOG_INFO(logger, message)
+#define	CARBONLOG_ERROR(logger, message)
 
 #define CARBONLOG_CLASS_PTR		carbonDefaultLogger*
 
@@ -58,7 +59,6 @@ using namespace log4cxx::helpers;
 
 #include "Constants.h"
 #include <iostream>
-
 
 //some carbon log related definitions and constants
 namespace carbonLog{

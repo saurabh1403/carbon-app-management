@@ -59,6 +59,13 @@ bool IDAppGlobalContext::initIDApp()
 		return false;
 	}
 
+	//init the product database
+	if(!_prodObj.initProductDb())
+	{
+		CARBONLOG_ERROR(logger, "[initIDApp] : Failed to initialize product Database");
+		return false;
+	}
+
 	isIDAppInitialized = true;
 
 	CARBONLOG_INFO(logger, "[initIDApp] : IDApp successfully initializaed");
@@ -69,6 +76,12 @@ bool IDAppGlobalContext::initIDApp()
 ThreadPool &IDAppGlobalContext::getThreadPool()
 {
 	return tPool;
+}
+
+PDbWrapper &IDAppGlobalContext::getProdDbHandle()
+{
+	return _prodObj;
+
 }
 
 //TODO: send the termination packet to UI
@@ -102,7 +115,7 @@ TempManager &IDAppGlobalContext::getTempMgr()
 }
 
 
-void IDAppGlobalContext::executeFunctionWithParameters(const IDAppNativeJob &inJob, std::string &outStr)
+void IDAppGlobalContext::executeFunctionWithParameters(IDAppNativeJob &inJob, std::string &outMsg)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 
@@ -113,7 +126,7 @@ void IDAppGlobalContext::executeFunctionWithParameters(const IDAppNativeJob &inJ
 	if( itr != targetFnMap.end())
 	{
 		CARBONLOG_DEBUG(logger, "[executeFunctionWithParameters] : Executing target function "<<inJob.targetObject);
-		itr->second(inJob.targetArgument, outStr);
+		itr->second(inJob,outMsg);
 	}
 
 	else

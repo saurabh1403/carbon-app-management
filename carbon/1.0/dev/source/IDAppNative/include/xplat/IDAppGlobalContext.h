@@ -7,14 +7,16 @@
 #include "ThreadPool.h"
 #include "Log.h"
 #include "NativeJob.h"
+#include "ProductDbWrapper.h"
 
 #include <map>
 
 class BridgeInterface;
 class TempManager;
 
-typedef void(*msgTarget)(const std::string &inMsg, std::string &outMsg);
+typedef void(*msgTarget)(IDAppNativeJob &inJob, std::string &outMsg);
 
+//whole product level information is stored here.
 class IDAppGlobalContext
 {
 
@@ -25,6 +27,7 @@ private:
 	BridgeInterface biObj;
 	TempManager tempMgr;
 	ThreadPool tPool;
+	PDbWrapper _prodObj;
 
 	bool isIDAppInitialized;
 	
@@ -38,10 +41,11 @@ public:
 	BridgeInterface &getBIObject();
 	TempManager &getTempMgr();
 	ThreadPool &getThreadPool();
+	PDbWrapper &getProdDbHandle();
 
 	bool closeIDApp();
 
-	void executeFunctionWithParameters(const IDAppNativeJob &inJob, std::string &outStr);
+	void executeFunctionWithParameters(IDAppNativeJob &inJob, std::string &outMsg);
 
 	void handleIDAppCloseSignal();
 

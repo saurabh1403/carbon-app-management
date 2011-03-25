@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BridgeInterface.lib log4cxx.lib"
+				AdditionalDependencies="BridgeInterface.lib crypt_static_lib.lib log4cxx.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;;&quot;$SolutionDir\..\..\..\..\target\$(ConfigurationName)\win&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,7 +119,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;"
+				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="BridgeInterface.lib log4cxx.lib"
+				AdditionalDependencies="BridgeInterface.lib log4cxx.lib crypt_static_lib.lib "
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$SolutionDir\..\..\..\..\imports\target\$(ConfigurationName)\win&quot;;&quot;$SolutionDir\..\..\..\..\target\$(ConfigurationName)\win&quot;"
 				GenerateDebugInformation="true"
@@ -192,10 +194,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\source\IDAppNative\source\xplat\main.cpp"
 					>
 				</File>
@@ -204,7 +202,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\common\source\xplat\TempManager.cpp"
+					RelativePath="..\..\..\source\common\source\xplat\ProductDbWrapper.cpp"
 					>
 				</File>
 			</Filter>
@@ -213,10 +211,6 @@
 				>
 				<File
 					RelativePath="..\..\..\source\IDAppNative\source\win\ThreadPool.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\source\common\source\win\Utilities.cpp"
 					>
 				</File>
 			</Filter>
@@ -234,15 +228,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppConstants.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppGlobalContext.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\source\IDAppNative\include\xplat\IDAppNative.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\source\common\include\xplat\Log.h"
 					>
 				</File>
 				<File
@@ -258,19 +252,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\source\common\include\xplat\ProductDbWrapper.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\common\include\xplat\SessionMgr.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\source\common\include\xplat\TempManager.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\source\IDAppNative\include\xplat\ThreadPool.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\source\common\include\xplat\Utilities.h"
 					>
 				</File>
 			</Filter>
@@ -284,6 +274,158 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="carbon_APL"
+			>
+			<Filter
+				Name="header"
+				>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\AESEncryption.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\include\xplat\ApplicationProvisioningLibrary.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CarbonSteganography.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CipherUtilities.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\EDMM.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\SqliteWrapper.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="source"
+				>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\AESEncryption.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\CarbonSteganography.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\CipherUtilities.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\EDMM.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\SqliteWrapper.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="steganography"
+				>
+				<File
+					RelativePath="..\..\..\imports\Steganography\EasyBMP.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\imports\Steganography\EasyBMP.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\imports\Steganography\EasyBMP_BMP.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\imports\Steganography\EasyBMP_DataStructures.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\imports\Steganography\EasyBMP_VariousBMPutilities.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="common"
+			>
+			<Filter
+				Name="include"
+				>
+				<File
+					RelativePath="..\..\..\configurations\cpp\carbonConfigurations.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CarbonXmlParser.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\configurations\cpp\CipherConfigurations.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Constants.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Log.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\TempManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\Utilities.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="source"
+				>
+				<File
+					RelativePath="..\..\..\source\common\source\win\CarbonXmlParser.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\Log.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\xplat\TempManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\source\win\Utilities.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="sqlite"
+			>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\imports\Sqlite\sqlite\sqlite3ext.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

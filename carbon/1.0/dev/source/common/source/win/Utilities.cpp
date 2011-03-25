@@ -230,4 +230,24 @@ unsigned int cuGetNumberOfProcessors()
 	return sys_Info.dwNumberOfProcessors;
 }
 
+bool getCarbonCommonFolderPath(OSString &outPath)
+{
+	TCHAR commonPath[MAX_PATH];
+	if(!SHGetSpecialFolderPath(NULL,commonPath,CSIDL_PROGRAM_FILES_COMMON,false))
+	{
+		return false;
+	}
+
+	outPath=commonPath;
+	outPath += kUCarbonCommonFolderRelPath;
+
+	return true;
+}
+
+bool testfn(vector<OSString> temp)
+{
+
+	return true;
+}
+
 }

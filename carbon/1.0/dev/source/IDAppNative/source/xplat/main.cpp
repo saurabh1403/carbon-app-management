@@ -49,10 +49,13 @@ int main(int argc, char *argv[])
 	return 0;
 */
 
+	CoInitialize(NULL);
+
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	if(!IDAppGlobalContext::getInstance().initIDApp())
 	{
 		CARBONLOG_FATAL(logger, "[IDApp Main] : Failed to initialize IDApp Native. Fatal Error. Quitting Now");
+		//TODO: show a native dialogue here saying the package is corrupt
 		return -1;
 	}
 
@@ -92,6 +95,8 @@ int main(int argc, char *argv[])
 	}	//end of while loop
 
 	IDAppGlobalContext::getInstance().closeIDApp();
+
+	CoUninitialize();
 
 	return 0;
 }

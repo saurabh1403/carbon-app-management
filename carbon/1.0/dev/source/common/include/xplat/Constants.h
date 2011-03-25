@@ -2,7 +2,10 @@
 #pragma once
 
 #include <string>
+#include <map>
+#include <vector>
 #include "carbonConfigurations.h"
+
 
 #ifdef WIN32
 
@@ -25,10 +28,10 @@
 #endif
 
 
-
-
-
-
+typedef std::map<OSString, OSString> aMapOsStr;
+typedef std::map<std::string,std::string> aMapStr;
+typedef std::vector<std::string> aVectorStr;
+typedef std::vector<OSString> aVectorOsStr;
 
 
 

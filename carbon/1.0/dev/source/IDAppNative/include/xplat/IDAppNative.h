@@ -9,9 +9,10 @@
 
 void processJob(const std::string &jobMsg, std::string &resStr);
 
-void startPackageSession(const std::string &inMsg, std::string &outMsg);
+//These functions can also send the message to UI directly without returning in the last. 
+void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg);
 
-void closePackageSession(const std::string &inMsg, std::string &outMsg);
+void closePackageSession(IDAppNativeJob &inJob, std::string &outMsg);
 
-void getAvailablePackages(const std::string &inMsg, std::string &outMsg);
+void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg);
 
