@@ -21,14 +21,63 @@ TempManager::TempManager(unsigned int nCountLocation)
 	for(unsigned int i = 0; i < nCountLocation; i++)
 	{
 		if(!cuCreateTempFolder(tempLoc, errMsg))
+		{
 			CARBONLOG_FATAL(logger, errMsg);
+			continue;
+		}
 
 		tempFolder.push_back(tempLoc);
+
+#ifdef WIN32
+		string sTempLoc;
+		cuConvertOSStringToString(tempLoc, sTempLoc);
+		sTempFolder.push_back(sTempLoc);
+
+#endif
 		nTempLocations++;
 
 	}
 
 }
+
+#ifdef WIN32
+
+bool TempManager::getNewTempFilePath(std::string &tempfolderPath, std::string &tempFileName)
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	if(!getTempFolderPath(tempfolderPath))
+		return false;
+
+	if(!cuGenerateGUID(tempFileName))
+	{
+		CARBONLOG_WARN(logger, L"[getNewTempFilePath] : Failed to generate guid for temp file name.");
+		return false;
+	}
+
+	return true;
+}
+
+//it returns the temp folder location only
+bool TempManager::getTempFolderPath(std::string &tempPath)
+{
+	EnterCriticalSection(&cTempMgrCrit);
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
+	if(nTempLocations == 0)
+	{
+		CARBONLOG_WARN(logger, L"[getTempFolderPath] : The number of temp folder is zero.");
+		return false;
+	}
+
+	else 
+		tempPath = sTempFolder.at(rand()%nTempLocations);
+
+	LeaveCriticalSection(&cTempMgrCrit);
+	return true;
+}
+
+#endif
+
 
 TempManager::~TempManager()
 {
@@ -103,6 +152,12 @@ bool TempManager::clearTemp()
 			CARBONLOG_WARN(logger, OSConst("[clearTemp] : Failed to delete the directory - ")<<*itr);
 	}
 	nTempLocations = 0;
+	tempFolder.clear();
+
+#ifdef WIN32
+	sTempFolder.clear();
+#endif
+
 
 	LeaveCriticalSection(&cTempMgrCrit);
 

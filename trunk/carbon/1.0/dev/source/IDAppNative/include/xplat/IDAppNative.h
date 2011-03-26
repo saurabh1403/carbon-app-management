@@ -16,3 +16,9 @@ void closePackageSession(IDAppNativeJob &inJob, std::string &outMsg);
 
 void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg);
 
+void getPackageSessionData(IDAppNativeJob &inJob, std::string &outMsg);
+
+void getContent(IDAppNativeJob &inJob, std::string &outMsg);
+
+void clearCachedContent(IDAppNativeJob &inJob, std::string &outMsg);
+

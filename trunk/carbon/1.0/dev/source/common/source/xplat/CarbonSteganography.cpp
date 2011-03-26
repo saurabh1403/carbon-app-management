@@ -599,8 +599,10 @@ namespace carbonStegano
 	}
 
 
+	//TODO:
 	bool retriveFileFromBmpStream(const std::string &inBmpFileDataStream, const std::string &outFilePath){ return true;}
 
+	//TODO:
 	bool retrieveDataFromBmpStream(const std::string &inBmpFileDatastream, const std::string &outData){return true; }
 
 	bool retrieveDataFromBmp(const std::string &inBmpFilePath, std::string &outData)

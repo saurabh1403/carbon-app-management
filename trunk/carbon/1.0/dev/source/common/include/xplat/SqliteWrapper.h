@@ -24,6 +24,8 @@ public:
 	DMM();
 	~DMM();
 
+	bool isInitialized;
+
 	int init(const string &dbPath);
 
 #ifdef WIN32
