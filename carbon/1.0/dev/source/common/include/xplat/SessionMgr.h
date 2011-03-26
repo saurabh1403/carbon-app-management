@@ -85,13 +85,8 @@ void SessionMgr<T>::removeAllSession()
 template <class T>
 bool SessionMgr<T>::createSession(std::string sessionId, T* sessionPtr)
 {
-	if(_sessions.find(sessionId) != _sessions.end())
-	{
-		_sessions[sessionId] = sessionPtr;
-		activeSession = sessionId;
-		return true;
-	}
+	_sessions[sessionId] = sessionPtr;
+	activeSession = sessionId;
 
-	else
-		return false;
+	return true;
 }

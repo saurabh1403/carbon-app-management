@@ -9,7 +9,20 @@ IDAppNativeJob::IDAppNativeJob():isJobForSession(false)
 
 }
 
-void IDAppNativeJob::getErrorXmlString(string &outXml, string errMsg)
+//TODO:
+void IDAppNativeJob::getErrorXmlNode(std::string &outStr, const std::string errTitle, const std::string errMsg, const std::string errCode)
+{
+	outStr = "<error>";
+
+	outStr = "<errorMsg>";
+	outStr += errTitle;
+	outStr += "</errorMsg>";
+
+	outStr = "</error>";
+
+}
+
+void IDAppNativeJob::getErrorXmlString(string &outXml, string errNode)
 {
 	outXml = "<result>";
 
@@ -17,12 +30,17 @@ void IDAppNativeJob::getErrorXmlString(string &outXml, string errMsg)
 	outXml += this->callIdentifier;
 	outXml += "</CallIdentifier>";
 
-	outXml += "<error>";
-	if(errMsg.empty())
+	if(errNode.empty())
+	{
+		outXml += "<error>";
+		outXml += "<errorMsg>";
 		outXml += "Failed to process xml";
+		outXml += "</errorMsg>";
+		outXml += "</error>";
+	}
+
 	else
-		outXml += errMsg;
-	outXml += "</error>";
+		outXml += errNode;
 
 	outXml += "</result>";
 
@@ -89,7 +107,7 @@ void IDAppNativeJob::getOutputXmlString(const std::string &targetResultStr, std:
 
 	if(!outputXmlParser.initWithXMLString(targetResultStr))
 	{
-		CARBONLOG_ERROR(logger, "[getOutputXmlString] : Failed to init the xml obj for outputXml node");
+		CARBONLOG_ERROR(logger, "[getOutputXmlString] : Failed to init the xml obj for outputXml node : "<<targetResultStr.c_str());
 		getErrorXmlString(outStr);
 		return;
 	}

@@ -6,7 +6,7 @@ minimize crashiness when clients ignore the capsStatus return codes. */
 static const char* empty_list = NULL;
 static const char empty_string = NULL;
 
-DMM::DMM():db(NULL)
+DMM::DMM():db(NULL),isInitialized(false)
 {
 
 }
@@ -60,6 +60,8 @@ int DMM::init(const string &dbPath)
 		errMsg = "Error setting busy timeout:";
 		errMsg += sqlite3_errmsg(db);
 	}
+
+	isInitialized = true;
 
 	return SQLITE_OK;
 }

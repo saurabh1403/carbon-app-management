@@ -44,6 +44,9 @@ bool IDAppGlobalContext::initIDApp()
 	targetFnMap["startPackageSession"] = startPackageSession;
 	targetFnMap["closePackageSession"] = closePackageSession;
 	targetFnMap["getAvailablePackages"] = getAvailablePackages;
+	targetFnMap["getPackageSessionData"] = getPackageSessionData;
+	targetFnMap["getContent"] = getContent;
+	targetFnMap["clearCachedContent"] = clearCachedContent;
 
 	//init BI
 	if(biObj.initBI()!=kBridgeInterfaceErrorNone)
@@ -130,7 +133,10 @@ void IDAppGlobalContext::executeFunctionWithParameters(IDAppNativeJob &inJob, st
 	}
 
 	else
+	{
 		CARBONLOG_ERROR(logger, "[executeFunctionWithParameters] : target function doesn't exist"<<inJob.targetObject);
+		inJob.getErrorXmlString(outMsg, "The target function name doesn't exist.");
+	}
 
 }
 
@@ -145,7 +151,6 @@ BridgeInterfaceStatus IDAppGlobalContext::writePktToBi(const std::string &pktMsg
 	if(!isIDAppInitialized)
 		CARBONLOG_WARN(logger, "[writePktToBi] : Global Context yet not initialized");
 
-	CARBONLOG_TRACE(logger, "[writePktToBi] : writing job msg - "<<pktMsg.c_str());
 	if(pktMsg.empty())
 		return kBridgeInterfaceErrorNone;
 
@@ -159,7 +164,6 @@ BridgeInterfaceStatus IDAppGlobalContext::writePktToBi(const std::string &pktMsg
 		CARBONLOG_ERROR(logger, "[writePktToBi] : Failed to send packet to UI. Error core is "<<biStatus);
 	}
 
-	CARBONLOG_TRACE(logger, "[writePktToBi] : done with writing packet");
 	return biStatus;
 
 }

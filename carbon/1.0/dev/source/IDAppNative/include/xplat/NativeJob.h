@@ -29,8 +29,9 @@ public:
 
 };
 
-//TODO: complete this functionality
+//complete this functionality
 //two types of job. Universal or for a particular session
+//TODO: rename this class. This can be used at many places
 class IDAppNativeJob:public INativeJob
 {
 private:
@@ -56,7 +57,11 @@ public:
 	//this constructs the output xml using the callIdentifier and the targetResultStr. The output is stored in outStr
 	void getOutputXmlString(const std::string &targetResultStr, std::string &outStr);
 
+	//this is similar to getOutputXmlString except that it doesn't use the xml parser. Since the error might have occured bcoz of xmlparser also
+	//it uses the string concatenation to make the output message xml
 	void getErrorXmlString(string &outXml, string errMsg = "");
+
+	static void getErrorXmlNode(std::string &outStr, const std::string errTitle = "", const std::string errMsg = "", const std::string errCode = "");
 
 };
 
