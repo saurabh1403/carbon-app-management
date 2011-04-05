@@ -38,7 +38,9 @@ public:
 	virtual bool insertOrReplaceQuery(const aVectorStr &values, const string &tableName);
 	virtual bool insertQuery(const aVectorStr &values, const string &tableName);
 
+	//fields are the comma separated fields or "*" in case of everything
 	virtual bool getQueryResult(const string &fields, const aMapStr &keyValues, const string &tableName, const char *** outList, const string &predicate = " = ");
+	virtual bool getQueryResult(const string &fields, const aMapStr &keyValues, const string &tableName, vector<string> &outList, const string &predicate = " = ");
 
 	virtual bool deleteRecordquery(const aMapStr &keyValue, const string &tableName, const string &predicate = " = ");
 

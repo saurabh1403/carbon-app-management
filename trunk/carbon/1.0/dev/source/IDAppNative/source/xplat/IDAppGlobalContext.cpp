@@ -38,7 +38,7 @@ bool IDAppGlobalContext::initIDApp()
 {
 	//init logger
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
-	carbonLogger::setLogLevel(carbonLog::LOG_INFO);
+	carbonLogger::setLogLevel(carbonLog::LOG_TRACE);
 
 	targetFnMap.clear();
 	targetFnMap["startPackageSession"] = startPackageSession;

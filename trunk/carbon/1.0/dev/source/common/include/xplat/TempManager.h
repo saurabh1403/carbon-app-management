@@ -9,7 +9,7 @@
 #include "Utilities.h"
 using namespace std;
 
-//TODO: make a templatized class to allow string as well as osstring capability
+//_TODO: make a templatized class to allow string as well as osstring capability
 class TempManager
 {
 
@@ -21,12 +21,6 @@ private:
 	CRITICAL_SECTION cTempMgrCrit;
 
 	vector <std::string> sTempFolder;
-
-	//it just returns the file name and not creates the file. fileName is just a guid
-	bool getNewTempFilePath(std::string &tempfolderPath, std::string &tempFileName);
-
-	//it returns the temp folder location only
-	bool getTempFolderPath(std::string &tempPath);
 
 #else
 
@@ -48,6 +42,16 @@ public:
 
 	//deletes every temp folder
 	bool clearTemp();
+
+#ifdef WIN32	
+
+	//it just returns the file name and not creates the file. fileName is just a guid
+	bool getNewTempFilePath(std::string &tempfolderPath, std::string &tempFileName);
+
+	//it returns the temp folder location only
+	bool getTempFolderPath(std::string &tempPath);
+
+#endif
 
 };
 

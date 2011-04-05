@@ -24,7 +24,20 @@
 #define UIDataNodeName						"uiData"
 #define ContentTypeNodeName					"contentType"
 #define InfoXmlNodeName						"infoXmlPath"
+#define ResourceBaseFolderConst				"resourceBaseFolder"
+#define ContentDetailKeyName				"contentDetail"
+
+#define ContentIdentifierTagName			OSConst("identifier")
+#define ContentTypeTagName					OSConst("type")
 //**********************************************************************
+
+//*****************constants related to argument xml xqueries*******************
+
+#define ContentFileXquery					OSConst("/argumentXml/contentFile")
+#define ContentTypeXquery					OSConst("/argumentXml/type")
+#define contentInfoNodesXquery				OSConst("/contents/content")
+
+//***************************************************************************
 
 struct contentInfo
 {
@@ -32,17 +45,18 @@ struct contentInfo
 	string contentInfoXmlPath;
 };
 
+//_TODO: in all functions of this class, return only the data to the caller and donot contruct the output xml. This introduced coupling between this class and the protocol
 class PackageSession:public NativeSession
 {
 
 private:
 
 	OSString packagePath;
+	std::string sPackagePath;
 
 	//********************Session related members*************
 	volatile bool isSessionInitialized;
-	std::string sPackagePath;		//in utf-8 format
-	volatile std::map<string, string> contentLocation;			// a map of content name and their path (stored in utf8 format)
+	std::map<string, string> contentLocation;			// a map of content name and their path (stored in utf8 format)
 	TempManager tempMgr;
 
 	//*******************package related data**********
@@ -53,12 +67,10 @@ private:
 
 	//******************security(encryption) related members************************
 	DMM _pkgDb;		//this is not an encrypted db. only base 64 encoded xml would be present here
-	AESWrapper _contentDecoder;			//TODO: in future make this a dynamic logic to detect the type of encryption also
-
-
+	AESWrapper _contentDecoder;			//_TODO: in future make this a dynamic logic to detect the type of encryption also
 
 #ifdef WIN32
-	CRITICAL_SECTION IDAppCritSec;
+	CRITICAL_SECTION PackageSessionCritSec;
 #else
 
 #endif
@@ -81,6 +93,16 @@ private:
 	//initializes the aes wrapper by getting the decryption keys from the db
 	bool initializeContentDecryptor();
 
+	bool getSecretInfoFileFromDb(std::string &filePath);
+
+	//it fetches the data from the packageContent table. thats all 
+	bool populateContentInfoStructFromdb(const string &keyName, contentInfo &outVar);
+
+	//it fetches the xml 
+	bool populatePackageContentXmlFromdb();
+
+	bool extractXmlFromDb(const string &keyName, std::string &xmlPath);
+
 public:
 
 	PackageSession():isSessionInitialized(false)
@@ -95,7 +117,7 @@ public:
 
 	//here will be all functions will be present inside this class and will be called from UI. //all output string will be utf8 string
 
-	//TODO: implement this function in a thread safe manner
+	//implement this function in a thread safe manner
 	//clears all the temp content
 	bool clearCachedContent(std::string &resStr);
 

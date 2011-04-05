@@ -78,6 +78,7 @@ class CarbonXMLParser
 		bool getXMLStringOfNode(const XMLNode aNode, OSString & outvalue);
 
 #ifdef WIN32
+		bool initWithXMLPath(const std::string &xmlFilePath);
 		bool initWithXMLString( const string & xmlString);
 		bool stringValueForXQuery( const OSString & xQuery, string & outValue);
 		bool createNodeWithNameAndValue(const string & nodeName, const string & nodeValue, XMLNode& outValue);

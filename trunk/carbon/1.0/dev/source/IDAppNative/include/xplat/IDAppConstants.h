@@ -16,3 +16,32 @@
 
 #define PackageIdNodeXquery			OSConst("/argumentXml/packageId")		//this is w.r.t. argumentXml node
 
+
+//*****package db related constants************
+
+#define kInstalledState				"2"
+#define kUninstalledState			"0"
+#define kExpiredState				"3"
+#define kNotActivatedState			"2"
+
+#define kResourceDataKeyName		"resourceData"
+#define kUIDataKeyName				"uiData"
+
+
+//************pdb related constants*************
+
+
+#define kPackageDirConst			"INSTALLDIR"
+#define kPackageIconConst			"PackageIcon"
+
+
+
+
+
+
+
+
+
+
+
+

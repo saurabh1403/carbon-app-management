@@ -5,7 +5,7 @@
 #include "Log.h"
 #include <list>
 
-//TODO: to pass the vector of funtion pointers here to start the thread with. Currently, it uses the fixed funtions for the thread
+//_TODO: to pass the vector of funtion pointers here to start the thread with. Currently, it uses the fixed funtions for the thread
 class ThreadPool
 {
 

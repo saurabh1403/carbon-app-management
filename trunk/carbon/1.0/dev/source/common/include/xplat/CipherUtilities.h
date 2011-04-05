@@ -31,7 +31,7 @@ public:
 
 	AESSecretKeyContainer():key(NULL), iv(NULL), key_length(0), block_length(0)
 	{
-		//TODO: yet to decide if it should generate random keys or not
+		//yet to decide if it should generate random keys or not. No, it should not
 		//initWithRandomKeys();
 	}
 

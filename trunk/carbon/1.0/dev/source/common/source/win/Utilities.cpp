@@ -62,7 +62,7 @@ bool getCharArrayFromInt(char **outArr, unsigned int i, unsigned int chars_count
 }
 
 
-bool utilCreateFileWithData( const void *data, int length, OSString &filePath )
+bool cuCreateFileWithData(const void *data, unsigned int length, OSString &filePath)
 {
 	HANDLE hOutputFile=::CreateFile(filePath.c_str(),GENERIC_WRITE,FILE_SHARE_READ ,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 
@@ -202,6 +202,18 @@ bool cuCreateDirectory(const OSString &path)
 		return false;
 	}
 
+	return true;
+}
+
+bool cuGetOSStringFromInt(unsigned int input, OSString &outNum)
+{
+	char *num;
+	if(!getCharArrayFromInt(&num, input))
+	{
+		return false;
+	}
+
+	cuConvertStringToOSString(num, outNum);
 	return true;
 }
 

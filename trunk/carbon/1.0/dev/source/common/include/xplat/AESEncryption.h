@@ -54,6 +54,9 @@ public:
 
 	//this is the most preferred and recommended way to use it.
 	AESWrapper(const carboncipherUtilities::AESSecretKeyContainer &inKeyMgr, carbonCipherConfiguration::AESAlgoCode aesAlgo = carbonCipherConfiguration::AES_CFB);
+
+	void initializeCiphersFromKeys(const carboncipherUtilities::AESSecretKeyContainer &aes_key);
+
 	~AESWrapper();
 
 	bool encryptBytes(const byte *inStr, size_t byteSize, std::string &outStr);
@@ -73,7 +76,6 @@ private:
 
 	//initialize ciphers from the given key
 	void initializeCiphersFromKeys();
-	void initializeCiphersFromKeys(const carboncipherUtilities::AESSecretKeyContainer &aes_key);
 
 	carboncipherUtilities::AESSecretKeyContainer *keyStorage;
 	bool isAESinitialized;

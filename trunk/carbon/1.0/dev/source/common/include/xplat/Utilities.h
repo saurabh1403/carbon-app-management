@@ -22,6 +22,8 @@ namespace carbonUtilities
 
 	bool cuCreateFileWithData( const void *data, unsigned int length, OSString &filePath);
 
+	bool cuGetOSStringFromInt(unsigned int input, OSString &outNum);
+
 //	bool readFromFile(const string &infilePath, char *outArr);
 
 #ifdef WIN32
