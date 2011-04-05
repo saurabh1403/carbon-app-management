@@ -15,7 +15,7 @@
 
 class MsgQueue;
 
-//TODO: add the error string the class for storing all the error messages. 
+//TODO: add the error string in the class for storing all the error messages. 
 class BridgeInterface
 {
 

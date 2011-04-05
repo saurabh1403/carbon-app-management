@@ -31,7 +31,7 @@ public:
 	void removeAllSession();
 	bool createSession(std::string, T*);
 
-	//TODO: it will set the session as active one for the given id
+	//_TODO: it will set the session as active one for the given id
 	bool setSessionAsActive(std::string);
 
 };

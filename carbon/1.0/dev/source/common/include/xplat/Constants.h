@@ -12,16 +12,23 @@
 	#include <tchar.h>
 	#include <Windows.h>
 	#define OSConst(x)		_T(x)	
-	#define OSSlash		OSConst("\\")
+	#define OSSlash			OSConst("\\")
+	#define Slash			"\\"
 
 	typedef TCHAR OSChar;
 	typedef std::wstring OSString;
 
+#define EnterPlatformCritSection(x)					EnterCriticalSection(x)
+#define	LeavePlatformCritSection(x)					LeaveCriticalSection(x)
+						
 #else
 
 	#define OSConst(x)		x			
 	#define OSSlash		OSConst("/")
 
+#define EnterPlatformCritSection(x)					
+#define	LeavePlatformCritSection(x)					
+		
 	typedef char OSChar;
 	tyepdef std::string OSString
 

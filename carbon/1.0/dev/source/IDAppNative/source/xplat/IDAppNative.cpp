@@ -52,15 +52,28 @@ void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 	}
 
 	OSString pkgPath;
-	IDAppGlobalContext::getInstance().getProdDbHandle().getPackageDirectory(pkgId, pkgPath);	//this is the absolute path to the package directory
+	if(!IDAppGlobalContext::getInstance().getProdDbHandle().getPackageDirectory(pkgId, pkgPath))	//this is the absolute path to the package directory
+	{
+		string _temp;
+		CARBONLOG_ERROR(logger, "[startPackageSession] : Failed to get package path");
+		IDAppNativeJob::getErrorXmlNode(_temp, "Error getting package directory");
+		inJob.getErrorXmlString(outMsg, _temp);
+		return;
+	}
 
 	//check whether the session is already opened
 	PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(inJob.sessionId);
 
 	if(pkgSession != NULL)		//already opened. call the init again. thats all
 	{
-		pkgSession->initSession(pkgPath);
-		inJob.getOutputXmlString(OutputXmlNode, outMsg);
+		if(!pkgSession->initSession(pkgPath))
+		{
+			string _temp;
+			IDAppNativeJob::getErrorXmlNode(_temp, "Failed to init the session");
+			inJob.getErrorXmlString(outMsg, _temp);
+		}
+		else
+			inJob.getOutputXmlString(OutputXmlNode, outMsg);
 		return;
 	}
 

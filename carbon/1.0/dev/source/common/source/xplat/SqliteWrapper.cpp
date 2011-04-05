@@ -17,7 +17,6 @@ DMM::~DMM()
 		dbClose();
 }
 
-//TODO:
 #ifdef WIN32
 int DMM::init(const OSString &dbPath)
 {
@@ -172,7 +171,7 @@ bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const s
 
 	string query;
 
-	string condition_str = " WHERE ";
+	string condition_str = "";
 	aMapStr::const_iterator itr = keyValues.begin();
 	for(int count = 0;itr != keyValues.end(); itr++, count++)
 	{
@@ -180,6 +179,9 @@ bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const s
 		{
 			condition_str += " AND ";
 		}
+		else
+			condition_str = " WHERE ";
+
 
 		condition_str += itr->first;
 		condition_str += predicate + "'" + itr->second + "' ";
@@ -188,9 +190,35 @@ bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const s
 
 	query += "SELECT " + fields + " FROM " + tableName + condition_str;
 
-	return (queryForList(outList, query.c_str()) == SQLITE_OK);
+	int rv = queryForList(outList, query.c_str()); 
+
+	return (rv == SQLITE_OK);
 
 }
+
+bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const string &tableName, vector<string> &outList, const string &predicate)
+{
+	const char ** outCharList;
+	if(!getQueryResult(fields, keyValues, tableName, &outCharList, predicate))
+	{
+		return false;
+	}
+
+	int i  = 0;
+
+	while(outCharList[i] != NULL)
+	{
+		outList.push_back(outCharList[i]);
+		free((void*)outCharList[i]);
+		i++;
+	}
+
+	free(outCharList);
+
+	return true;
+
+}
+
 
 
 bool DMM::deleteRecordquery(const aMapStr &keyValue, const string &tableName, const string &predicate)

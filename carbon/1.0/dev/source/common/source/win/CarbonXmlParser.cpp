@@ -18,6 +18,14 @@ CarbonXMLParser::~CarbonXMLParser()
 	//docRef=NULL;
 }
 
+bool CarbonXMLParser::initWithXMLPath(const std::string &xmlFilePath)
+{
+	OSString tempPath;
+	carbonUtilities::cuConvertStringToOSString(xmlFilePath, tempPath);
+	return initWithXMLPath(tempPath);
+
+}
+
 bool CarbonXMLParser::initWithXMLPath(const OSString &xmlFilePath)
 {
 	MSXML2::IXMLDOMDocument2Ptr     pXMLDoc = NULL;

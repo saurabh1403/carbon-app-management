@@ -14,11 +14,11 @@ void IDAppNativeJob::getErrorXmlNode(std::string &outStr, const std::string errT
 {
 	outStr = "<error>";
 
-	outStr = "<errorMsg>";
+	outStr += "<errorMsg>";
 	outStr += errTitle;
 	outStr += "</errorMsg>";
 
-	outStr = "</error>";
+	outStr += "</error>";
 
 }
 
@@ -46,7 +46,7 @@ void IDAppNativeJob::getErrorXmlString(string &outXml, string errNode)
 
 }
 
-//TODO: parse the xml and populate the fields
+//parse the xml and populate the fields
 bool IDAppNativeJob::initJob(const std::string &inMsgStr)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());

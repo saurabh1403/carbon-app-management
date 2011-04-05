@@ -5,6 +5,7 @@
 using namespace carbonCipherConfiguration;
 using namespace carboncipherUtilities;
 
+//TODO: make another constructor which does nothing
 //it makes a default key and then uses it.
 AESWrapper::AESWrapper(AESAlgoCode aesAlgo)
 {
@@ -32,6 +33,21 @@ AESWrapper::AESWrapper(const AESSecretKeyContainer &inKeyMgr, AESAlgoCode aesAlg
 	}
 }
 
+void AESWrapper::initializeCiphersFromKeys(const AESSecretKeyContainer &aes_key)
+{
+	if(aes_key.isKeyValid())
+	{
+		keyStorage = new AESSecretKeyContainer(aes_key);
+		initializeCiphersFromKeys();
+		isAESinitialized = true;	
+	}
+
+	else
+	{
+		isAESinitialized = false;
+		keyStorage = NULL;
+	}
+}
 
 AESWrapper::~AESWrapper()
 {

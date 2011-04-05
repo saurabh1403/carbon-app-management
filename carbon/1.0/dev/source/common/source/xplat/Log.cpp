@@ -116,7 +116,7 @@ bool carbonLogger::init(carbonLog::carbonLogLevel logLevel, const OSString &logM
 	}
 	catch(Exception&)
 	{
-		//TODO: take some action and make a default basic log
+		//_TODO: take some action and make a default basic log
 	}
 
 #else

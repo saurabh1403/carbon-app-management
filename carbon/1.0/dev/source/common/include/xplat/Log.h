@@ -85,7 +85,7 @@ namespace carbonLog{
 
 
 //A singleton class to create the logger instances depending on the options. 
-//TODO: extend this class to return multiple loggerPtr objects depending on the loggername. 
+//_TODO: extend this class to return multiple loggerPtr objects depending on the loggername. 
 //It will be a kind of singleton + factory design pattern
 //just like session manager class. it also stores the information about the current active session
 class carbonLogger
