@@ -24,9 +24,6 @@
 #define kExpiredState				"3"
 #define kNotActivatedState			"2"
 
-#define kResourceDataKeyName		"resourceData"
-#define kUIDataKeyName				"uiData"
-
 
 //************pdb related constants*************
 

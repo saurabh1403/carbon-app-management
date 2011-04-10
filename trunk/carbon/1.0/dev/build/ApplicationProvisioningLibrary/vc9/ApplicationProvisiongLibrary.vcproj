@@ -186,6 +186,10 @@
 				Name="win"
 				>
 				<File
+					RelativePath="..\..\..\source\common\source\win\CarbonXmlParser.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\source\ApplicationProvisioningLibrary\source\win\dllmain.cpp"
 					>
 				</File>
@@ -265,6 +269,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\source\common\include\xplat\CarbonSteganography.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\source\common\include\xplat\CarbonXmlParser.h"
 					>
 				</File>
 				<File
