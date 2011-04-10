@@ -11,7 +11,7 @@
 #include <map>
 
 
-//************some constants related to package session and package data*****************
+//************some constants related to package session and package data db*****************
 
 #define GenericContentTypeString			"Generic-content"
 #define ZeroLevelContentTypeString			"0-Level-content"
@@ -19,24 +19,32 @@
 #define TwoLevelContentTypeString			"2-Level-content"
 #define ThreeLevelContentTypeString			"3-Level-content"
 
+#define ContentDetailKeyName				"contentDetail"
+
+#define ContentIdentifierTagName			OSConst("identifier")
+#define ContentTypeTagName					OSConst("type")
+
+#define SecretInfoFileKeyName				"KeyFile"
+
+#define kResourceDataKeyName				"resourceData"
+#define kUIDataKeyName						"uiData"
+
+
+//**********************************************************************
+
+//*****************constants related to xml (argument as well as present in db)*******************
+
+#define ContentFileXquery					OSConst("/argumentXml/contentFile")
+#define ContentTypeXquery					OSConst("/argumentXml/type")
+#define contentInfoNodesXquery				OSConst("/contents/content")
+
+
 
 #define ResourceFileNodeName				"resourceFiles"
 #define UIDataNodeName						"uiData"
 #define ContentTypeNodeName					"contentType"
 #define InfoXmlNodeName						"infoXmlPath"
 #define ResourceBaseFolderConst				"resourceBaseFolder"
-#define ContentDetailKeyName				"contentDetail"
-
-#define ContentIdentifierTagName			OSConst("identifier")
-#define ContentTypeTagName					OSConst("type")
-//**********************************************************************
-
-//*****************constants related to argument xml xqueries*******************
-
-#define ContentFileXquery					OSConst("/argumentXml/contentFile")
-#define ContentTypeXquery					OSConst("/argumentXml/type")
-#define contentInfoNodesXquery				OSConst("/contents/content")
-
 //***************************************************************************
 
 struct contentInfo
@@ -60,7 +68,7 @@ private:
 	TempManager tempMgr;
 
 	//*******************package related data**********
-	std::string pkgDataPath; 
+	std::string pkgDataPath;		//_TODO: populate this to be used as data path instead of just appending the content path to the package path
 	std::vector<contentInfo> contentNodes;
 	contentInfo resourcesInfo;
 	contentInfo uiDataInfo;
@@ -105,14 +113,15 @@ private:
 
 public:
 
-	PackageSession():isSessionInitialized(false)
+	PackageSession():isSessionInitialized(false),tempMgr(4)
 	{
 
 	}
 
 	~PackageSession()
 	{
-		closeSession();
+		std::string dummyVal;
+		closeSession(dummyVal);
 	}
 
 	//here will be all functions will be present inside this class and will be called from UI. //all output string will be utf8 string
@@ -132,7 +141,7 @@ public:
 
 	bool initSession(const OSString &pkgPath);
 
-	bool closeSession();
+	bool closeSession(std::string &resStr);
 
 };
 

@@ -74,7 +74,7 @@ bool PackageSession::initSession(const OSString &pkgPath)
 }
 
 
-bool PackageSession::closeSession()
+bool PackageSession::closeSession(std::string &resStr)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	if(!isSessionInitialized)
@@ -180,6 +180,30 @@ bool PackageSession::getPackageContentInfo(std::string &resStr)
 //TODO:
 bool PackageSession::getSecretInfoFileFromDb(std::string &filePath)
 {
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	
+	//db initialize
+	if(!_pkgDb.isInitialized)
+	{
+		CARBONLOG_ERROR(logger, "[getSecretInfoFileFromDb] : package db is not initialized");
+		return false;
+	}
+
+	const char ** outVal;
+	aMapStr keyVal;
+	keyVal["key"] = SecretInfoFileKeyName;
+	if(!_pkgDb.getQueryResult("value", keyVal, "packageContent", &outVal))
+	{
+		CARBONLOG_ERROR(logger, "[getSecretInfoFileFromDb] : Failed to get the value from package db for key " <<SecretInfoFileKeyName);
+		return false;
+	}
+
+	filePath = sPackagePath;
+
+	filePath += *outVal;
+
+	//TODO: remove this log
+	CARBONLOG_INFO(logger, "[getSecretInfoFileFromDb] : The key file location is " << filePath.c_str());
 
 	return true;
 }
@@ -188,10 +212,6 @@ bool PackageSession::getSecretInfoFileFromDb(std::string &filePath)
 bool PackageSession::initializeContentDecryptor()
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
-
-	//TODO:complete this
-	return true;
-
 
 	//db initialize
 	if(!_pkgDb.isInitialized)
@@ -215,6 +235,8 @@ bool PackageSession::initializeContentDecryptor()
 		CARBONLOG_ERROR(logger, "[initializeContentDecryptor] : Failed to get keystream from file");
 		return false;
 	}
+	
+	CARBONLOG_INFO(logger, "[initializeContentDecryptor] : The key stream is - "<< keyStream.c_str());
 
 	carboncipherUtilities::AESSecretKeyContainer _keyContainer;
 
@@ -263,7 +285,7 @@ bool PackageSession::getContent(const std::string &argXml, std::string &resStr)
 	}
 
 	string contentType;
-	if(!xmlObj.stringValueForXQuery(ContentTypeXquery, contentName))
+	if(!xmlObj.stringValueForXQuery(ContentTypeXquery, contentType))
 	{
 		CARBONLOG_WARN(logger, "[PackageSession::getContent] : Failed to get content type from argument xml");
 	}
@@ -279,8 +301,7 @@ bool PackageSession::getContent(const std::string &argXml, std::string &resStr)
 
 	else		//decode the content here
 	{
-		std::string contentPath = pkgDataPath;
-		contentPath += Slash;
+		std::string contentPath = sPackagePath;
 		contentPath  +=  contentName;
 
 		string tempPath, tempFile;
@@ -322,11 +343,11 @@ bool PackageSession::getContent(const std::string &argXml, std::string &resStr)
 	XMLNode rootnode;
 	outXmlObj.getRootNode(rootnode);
 
-	xmlObj.addChildToNode("contentFile", contentName, rootnode);
-	xmlObj.addChildToNode("type", contentType, rootnode);
-	xmlObj.addChildToNode("contentPath", outputContentPath, rootnode);
+	outXmlObj.addChildToNode("contentFile", contentName, rootnode);
+	outXmlObj.addChildToNode("type", contentType, rootnode);
+	outXmlObj.addChildToNode("contentPath", outputContentPath, rootnode);
 
-	xmlObj.getXMLString(resStr);
+	outXmlObj.getXMLString(resStr);
 	return true;
 }
 

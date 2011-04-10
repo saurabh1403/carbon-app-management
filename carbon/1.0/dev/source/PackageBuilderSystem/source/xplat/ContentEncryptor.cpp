@@ -10,13 +10,17 @@ bool ContentEncryptor::run(const std::string &xmlPath)
 
 	runEncryptor();
 
+	runDecryptor();
+
 	generateOutputXml();
 
 	return true;
 }
 
-bool ContentEncryptor::init(const std::string &xmlPath)
+bool ContentEncryptor::init(const std::string &xmlPath, enCodingMode inMode)
 {
+	objMode = inMode;
+
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 
 	if(!xmlObj.initWithXMLPath(xmlPath))
@@ -65,10 +69,15 @@ bool ContentEncryptor::populateContentDetails()
 				return false;
 			}
 
-			if( !xmlObj.stringValueForXQuery(curContentQuery + filePathTagName, _tempInfo.inPath) )
+			if( !xmlObj.stringValueForXQuery(curContentQuery + inFilePathTagName, _tempInfo.inPath) )
 			{		
 				CARBONLOG_ERROR(logger, "[populateContentDetails] : Failed to get the infilepath information from the xml at path" <<inXmlPath.c_str());
 				return false;
+			}
+
+			if( !xmlObj.stringValueForXQuery(curContentQuery + outFilePathTagName, _tempInfo.outPath) )
+			{		
+				CARBONLOG_INFO(logger, "[populateContentDetails] : Failed to get the outfilepath information from the xml at path" <<inXmlPath.c_str());
 			}
 
 			contentData.push_back(_tempInfo);
@@ -85,13 +94,14 @@ bool ContentEncryptor::loadConfigurations()
 	xmlObj.stringValueForXQuery(OutBmpFileXquery, this->outBmpPath);
 	xmlObj.stringValueForXQuery(OutDirXquery, this->outDir);
 
-	if(!inputBmpPath.empty())
+	if(objMode == encryptionMode)
 	{
 		return initContentEncoder();
 	}
-
 	else
-		return false;
+	{
+		return initContentDecoder();
+	}
 
 }
 
@@ -110,6 +120,8 @@ bool ContentEncryptor::initContentEncoder()
 		CARBONLOG_ERROR(logger, "[initContentEncoder] : Failed to get keystream from key container");
 		return false;
 	}
+	
+	CARBONLOG_INFO(logger, "[initContentEncoder] : The key stream is - "<< keyStream.c_str());
 
 	if(!carbonStegano::hideDataInBmp(keyStream, inputBmpPath, outBmpPath))
 	{
@@ -121,6 +133,22 @@ bool ContentEncryptor::initContentEncoder()
 
 	return true;
 
+}
+
+bool ContentEncryptor::initContentDecoder()
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	
+	string outKeyStream;
+	//TODO: take inBmpPath and not outBmpPath
+	bool ret = carbonStegano::retrieveDataFromBmp(outBmpPath, outKeyStream);
+
+	carboncipherUtilities::AESSecretKeyContainer keyStorage2;
+	keyStorage2.initKeysFromKeyStream(outKeyStream.c_str());
+	
+	_contentDecryptor.initializeCiphersFromKeys(keyStorage2);
+
+	return true;
 }
 
 bool ContentEncryptor::runEncryptor()
@@ -150,6 +178,26 @@ bool ContentEncryptor::runEncryptor()
 	return true;
 }
 
+bool ContentEncryptor::runDecryptor()
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
+	//TODO: testing purpose
+	vector<contentInfo>::const_reverse_iterator itr = contentData.rbegin();
+//	vector<contentInfo>::iterator itr = contentData.begin();
+	for(; itr!= contentData.rend(); itr++)
+	{
+		//TODO: dont seek outPath but inPath. This is just for testing
+		std::string outFilePath = itr->outPath;
+		outFilePath += "_test.flv";
+
+		_contentDecryptor.decryptFile(itr->outPath, outFilePath);
+	}
+
+	return true;
+
+}
+
 
 bool ContentEncryptor::generateOutputXml()
 {
@@ -171,8 +219,10 @@ bool ContentEncryptor::generateOutputXml()
 
 	//generate the configuration part
 	XMLNode configNode;
-	_xmlObj.createNodeWithNameAndValue("configurations", "", configNode);
+	_xmlObj.createNodeWithNameAndValue("configuration", "", configNode);
 	_xmlObj.addChildToNode("outBmpFile", outBmpPath, configNode);
+	_xmlObj.addChildToNode("outputDir", outDir, configNode);
+	_xmlObj.addChildToNode("inputBmpFile", inputBmpPath, configNode);
 	_xmlObj.addChildToNode(configNode, rootNode);
 
 	//******adding content nodes***********

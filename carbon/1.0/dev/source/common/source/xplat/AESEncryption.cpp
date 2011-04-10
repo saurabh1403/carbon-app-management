@@ -5,14 +5,15 @@
 using namespace carbonCipherConfiguration;
 using namespace carboncipherUtilities;
 
-//TODO: make another constructor which does nothing
+
 //it makes a default key and then uses it.
 AESWrapper::AESWrapper(AESAlgoCode aesAlgo)
 {
-	keyStorage = new AESSecretKeyContainer();
-	keyStorage->initWithRandomKeys();
-	initializeCiphersFromKeys();
-	isAESinitialized = true;
+//	keyStorage = new AESSecretKeyContainer();
+//	keyStorage->initWithRandomKeys();
+//	initializeCiphersFromKeys();
+	keyStorage = NULL;
+	isAESinitialized = false;
 }
 
 
@@ -81,6 +82,8 @@ bool AESWrapper::encryptBytes(const byte *inStr, size_t byteSize, std::string &o
 		) // StreamTransformationFilter
 		); // StringSource
 
+	cfbEncryptor.Resynchronize(this->keyStorage->getIV());
+
 	return true;
 }
 
@@ -97,6 +100,8 @@ bool AESWrapper::encryptString(const std::string &inStr, std::string &outStr)
 		new StringSink( outStr )
 		) // StreamTransformationFilter
 		); // StringSource
+
+	cfbEncryptor.Resynchronize(this->keyStorage->getIV());
 
 	return true;
 }
@@ -116,6 +121,7 @@ bool AESWrapper::encryptFile(const OSString &inFilePath, const OSString &outFile
 		) // StreamTransformationFilter
 		); // StringSource
 
+	cfbEncryptor.Resynchronize(this->keyStorage->getIV());
 
 	return true;
 }
@@ -135,6 +141,8 @@ bool AESWrapper::decryptBytes(const byte *inStr, size_t byteSize, std::string &o
 		) // StreamTransformationFilter
 		); // StringSource
 
+	cfbDecryptor.Resynchronize(this->keyStorage->getIV());
+
 	return true;
 }
 
@@ -151,6 +159,8 @@ bool AESWrapper::decryptString(const std::string &inStr, std::string &outStr)
 		new StringSink( outStr )
 		) // StreamTransformationFilter
 		); // StringSource
+
+	cfbDecryptor.Resynchronize(this->keyStorage->getIV());
 
 	return true;
 }
@@ -169,6 +179,8 @@ bool AESWrapper::decryptFile(const OSString &inFilePath, const OSString &outFile
 		) // StreamTransformationFilter
 		); // StringSource
 
+	cfbDecryptor.Resynchronize(this->keyStorage->getIV());
+
 	return true;
 }
 
@@ -176,6 +188,7 @@ bool AESWrapper::decryptFile(const OSString &inFilePath, const OSString &outFile
 
 bool AESWrapper::encryptFile(const std::string &inFilePath, const std::string &outFilePath)
 {
+
 	if(!isAESinitialized)
 		return false;
 
@@ -187,6 +200,10 @@ bool AESWrapper::encryptFile(const std::string &inFilePath, const std::string &o
 		new FileSink( outFilePath.c_str() )
 		) // StreamTransformationFilter
 		); // StringSource
+	
+	//This is needed since a same encryption and decryption object is used for all videos. 
+	//http://www.codeproject.com/KB/security/BlockCiphers.aspx  : See section - Reusing Encryption and Decryption Objects
+	cfbEncryptor.Resynchronize(this->keyStorage->getIV());
 
 	return true;
 }
@@ -204,6 +221,10 @@ bool AESWrapper::decryptFile(const std::string &inFilePath, const std::string &o
 		new FileSink( outFilePath.c_str() )
 		) // StreamTransformationFilter
 		); // StringSource
+
+	//This is needed since a same encryption and decryption object is used for all videos. 
+	//http://www.codeproject.com/KB/security/BlockCiphers.aspx  : See section - Reusing Encryption and Decryption Objects
+	cfbDecryptor.Resynchronize(this->keyStorage->getIV());
 
 	return true;
 }

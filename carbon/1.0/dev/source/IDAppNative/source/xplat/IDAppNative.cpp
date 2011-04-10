@@ -139,6 +139,30 @@ void closePackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	outMsg = "closePackageSession function routine"; 
 	CARBONLOG_TRACE(logger,"in closePackageSession routine");
+	
+	PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(inJob.sessionId);
+
+	if(pkgSession != NULL)
+	{
+		std::string outputXml;
+		if(!pkgSession->closeSession(outputXml))
+		{
+			//no logging. already must have been done
+			inJob.getErrorXmlString(outputXml, outMsg);
+			return;
+		}
+		else
+		{
+			inJob.getOutputXmlString(outputXml, outMsg);
+			return;
+		}
+	}
+
+	else
+	{
+		CARBONLOG_ERROR(logger, "[closePackageSession] : No Session exists for the session id "<<inJob.sessionId);
+		inJob.getErrorXmlString(outMsg, "The Package Session id is invaid");
+	}
 
 	//make the proper entries in license state
 

@@ -14,9 +14,11 @@
 
 #define identifierTagName			OSConst("identifier")
 #define sIdentifierTagName			"identifier"
-#define filePathTagName				OSConst("FilePath")
+#define inFilePathTagName				OSConst("inPath")
+#define outFilePathTagName			OSConst("outPath")
 
-#define resultXmlTag				OSConst("<result></result>")
+
+#define resultXmlTag				OSConst("<contentData></contentData>")
 
 struct contentInfo
 {
@@ -25,6 +27,14 @@ struct contentInfo
 	std::string outPath;
 };
 
+typedef enum mode
+{
+	encryptionMode,
+	decryptionMode
+
+}enCodingMode;
+
+
 class ContentEncryptor
 {
 
@@ -32,7 +42,9 @@ private:
 
 	vector<contentInfo>  contentData;
 	AESWrapper _contentEncryptor;
+	AESWrapper _contentDecryptor;
 	CarbonXMLParser xmlObj;
+	enCodingMode objMode;
 
 	//these are absolute paths
 	std::string inputBmpPath;
@@ -44,12 +56,7 @@ private:
 	bool loadConfigurations();
 	bool populateContentDetails();
 	bool initContentEncoder();
-
-	bool init(const std::string &xmlPath);
-
-	bool runEncryptor();
-
-	bool generateOutputXml();
+	bool initContentDecoder();
 
 
 public:
@@ -64,6 +71,14 @@ public:
 	}
 
 	bool run(const std::string &inXmlPath);
+	
+	bool init(const std::string &xmlPath, enCodingMode = encryptionMode);
+
+	bool runEncryptor();
+
+	bool runDecryptor();
+
+	bool generateOutputXml();
 
 
 };
