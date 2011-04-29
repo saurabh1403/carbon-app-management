@@ -9,7 +9,7 @@ private:
 
 public:
 
-	virtual bool processJob(IDAppNativeJob &job, std::string &resStr) = 0;
+	virtual bool processJob(IDAppNativeJob &job, std::string &resStr);
 	virtual bool initSession(const OSString &pkgPath) = 0;
 };
 

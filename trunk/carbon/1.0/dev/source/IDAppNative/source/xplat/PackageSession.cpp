@@ -21,7 +21,7 @@ Here is the method to add any new API in this module.
 ********************************/
 
 //TODO:
-bool PackageSession::initSession(const OSString &pkgPath)
+bool PackageSession::initSession(const OSString &pkgPath, const std::string pkgId, std::string &resStr)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	if(isSessionInitialized)
@@ -37,10 +37,43 @@ bool PackageSession::initSession(const OSString &pkgPath)
 
 	packagePath = pkgPath;
 	carbonUtilities::cuConvertOSStringToString(pkgPath, sPackagePath);
+	sPackageId = pkgId;
 
 	//check the licensing and the trial expiry
+	PkgInfo _pkgInfo;
+	_pkgInfo.pkgId = sPackageId;
+
+	OSString apdDbPath = _T("");
+	if(!carbonUtilities::getCarbonCommonFolderPath(apdDbPath))
+	{
+		CARBONLOG_FATAL(logger, "[initSession] : Failed to get the common folder path. Really Weired Error");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Corrupted. Reinstalling it may fix the problem");
+		return false;
+	}
+	apdDbPath += kUAPDRelativeFolderPath;
+	apdDbPath += OSSlash;
+	apdDbPath += kUApplicationProvisioningDataBaseName;
+
+	_pkgInfo.licenseDbPath = apdDbPath;
+	_pkgInfo.pkgPath = packagePath;
+
+	//_TODO: for testing only
+	if(!_pkgLicense.init(_pkgInfo))
+	{
+		CARBONLOG_FATAL(logger, "[initSession] : Failed to init APD library");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Corrupted. Reinstalling it may fix the problem");
+		return false;
+	}
+
+	if(_pkgLicense.validateLicense() != LicenseOk)
+	{
+		CARBONLOG_FATAL(logger, "[initSession] : License is not valid for this package");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Expired. Contact the Support team to renew the license");
+		return false;
+	}
 
 	//mark entry in db for its start time
+	startTime = time(NULL);
 
 	//open the db and check its validity
 	string pkgDbPath;
@@ -49,6 +82,7 @@ bool PackageSession::initSession(const OSString &pkgPath)
 	if(_pkgDb.init(pkgDbPath) != SQLITE_OK)
 	{
 		CARBONLOG_ERROR(logger, "[initSession] : Failed to init the package db");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Corrupted. Reinstalling it may fix the problem");
 		return false;
 	}
 
@@ -57,6 +91,7 @@ bool PackageSession::initSession(const OSString &pkgPath)
 	if(!populatePackageContentFromDb())
 	{
 		CARBONLOG_ERROR(logger, "[initSession] : Failed to populate the content from package db");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Corrupted. Reinstalling it may fix the problem");
 		return false;
 	}
 
@@ -64,8 +99,11 @@ bool PackageSession::initSession(const OSString &pkgPath)
 	if(!initializeContentDecryptor())
 	{
 		CARBONLOG_ERROR(logger, "[initSession] : Failed to initialize the content decoder");
+		IDAppNativeJob::getErrorXmlNode(resStr,"Product is Corrupted. Reinstalling it may fix the problem");
 		return false;
 	}
+
+	tempMgr.initWithTempLocations(4);
 
 	isSessionInitialized = true;
 
@@ -74,7 +112,7 @@ bool PackageSession::initSession(const OSString &pkgPath)
 }
 
 
-bool PackageSession::closeSession(std::string &resStr)
+bool PackageSession::closeSession()
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	if(!isSessionInitialized)
@@ -84,13 +122,30 @@ bool PackageSession::closeSession(std::string &resStr)
 	}
 
 	//mark time in db and the license
+	pkgTimeInfo _pkgTime;
+	_pkgTime.startTime = this->startTime;
+	_pkgTime.closeTime = time(NULL);
+
+	//mark the package end time
+	if(!_pkgLicense.updateLicense(_pkgTime))
+	{
+		CARBONLOG_FATAL(logger, "[closeSession] : Error in making db changes");
+	}
 
 	//free all memory and clear all temp
+	tempMgr.clearTemp();
 
-	//delete the resources file and uidata file
+	carbonUtilities::cuDeleteFile(resourcesInfo.contentInfoXmlPath);
+
+	carbonUtilities::cuDeleteFile(uiDataInfo.contentInfoXmlPath);
+	
+	std::vector<contentInfo>::const_iterator itr = contentNodes.begin();
+	for(; itr != contentNodes.end(); itr++)
+	{
+		carbonUtilities::cuDeleteFile(itr->contentInfoXmlPath);
+	}	
 
 	isSessionInitialized = false;
-
 
 	return true;
 }
@@ -177,7 +232,6 @@ bool PackageSession::getPackageContentInfo(std::string &resStr)
 
 }
 
-//TODO:
 bool PackageSession::getSecretInfoFileFromDb(std::string &filePath)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
@@ -235,9 +289,6 @@ bool PackageSession::initializeContentDecryptor()
 		CARBONLOG_ERROR(logger, "[initializeContentDecryptor] : Failed to get keystream from file");
 		return false;
 	}
-	
-	CARBONLOG_INFO(logger, "[initializeContentDecryptor] : The key stream is - "<< keyStream.c_str());
-
 	carboncipherUtilities::AESSecretKeyContainer _keyContainer;
 
 	if(!_keyContainer.initKeysFromKeyStream(keyStream.c_str()))
@@ -311,15 +362,28 @@ bool PackageSession::getContent(const std::string &argXml, std::string &resStr)
 		outputContentPath += Slash;
 		outputContentPath += tempFile;
 
+		OSString osOutPath, osInPath;
+		carbonUtilities::cuConvertStringToOSString(outputContentPath, osOutPath);
+		carbonUtilities::cuConvertStringToOSString(contentPath, osInPath);
+
 		//TOOD: remove this bloody log from here
 		CARBONLOG_TRACE(logger, "the output dir for content is " << outputContentPath.c_str());
 
-		if(!_contentDecoder.decryptFile(contentPath, outputContentPath))
+		//TODO: only for testing
+/*		if(!_contentDecoder.decryptFile(osInPath, osOutPath))
 		{
 			CARBONLOG_FATAL(logger, "[PackageSession::getContent] : Failed to decode the content ");
 			IDAppNativeJob::getErrorXmlNode(resStr, "Failed to decode content");
 			return false;
+		}*/
+		
+		if(!carbonUtilities::cuCopyFile(osInPath, osOutPath))
+		{
+			CARBONLOG_FATAL(logger, "[PackageSession::getContent] : Failed to copy the content ");
+			IDAppNativeJob::getErrorXmlNode(resStr, "Failed to copy content");
+			return false;
 		}
+
 
 		//only this part should be there in critical section
 
@@ -390,7 +454,7 @@ bool PackageSession::populatePackageContentFromDb()
 bool PackageSession::populatePackageContentXmlFromdb()
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
-	std::string contentInfoXmlPath;
+	OSString contentInfoXmlPath;
 	if(!extractXmlFromDb(ContentDetailKeyName, contentInfoXmlPath))
 	{
 		CARBONLOG_ERROR(logger, "[populatePackageContentXmlFromdb] : Failed to get the content xml from db for key " <<ContentDetailKeyName);
@@ -401,6 +465,7 @@ bool PackageSession::populatePackageContentXmlFromdb()
 	if(!xmlObj.initWithXMLPath(contentInfoXmlPath))
 	{
 		CARBONLOG_ERROR(logger, "[populatePackageContentXmlFromdb] : Failed to init the content info xml at path" <<contentInfoXmlPath.c_str());
+		carbonUtilities::cuDeleteFile(contentInfoXmlPath);
 		return false;
 	}
 
@@ -429,12 +494,14 @@ bool PackageSession::populatePackageContentXmlFromdb()
 			if( !xmlObj.stringValueForXQuery(curContentQuery + ContentIdentifierTagName, contentIdentifier) )
 			{		
 				CARBONLOG_ERROR(logger, "[populatePackageContentXmlFromdb] : Failed to get the identifier tag in the xml at path" <<contentInfoXmlPath.c_str());
+				carbonUtilities::cuDeleteFile(contentInfoXmlPath);
 				return false;
 			}
 
 			if( !xmlObj.stringValueForXQuery(curContentQuery + ContentTypeTagName, contentType) )
 			{		
 				CARBONLOG_ERROR(logger, "[populatePackageContentXmlFromdb] : Failed to get the type information from the xml at path" <<contentInfoXmlPath.c_str());
+				carbonUtilities::cuDeleteFile(contentInfoXmlPath);
 				return false;
 			}
 
@@ -442,6 +509,7 @@ bool PackageSession::populatePackageContentXmlFromdb()
 			contentInfo tempInfo;
 			if(!populateContentInfoStructFromdb(contentIdentifier, tempInfo))
 			{
+				carbonUtilities::cuDeleteFile(contentInfoXmlPath);
 				return false;
 			}
 
@@ -450,6 +518,7 @@ bool PackageSession::populatePackageContentXmlFromdb()
 		}
 	}
 
+	carbonUtilities::cuDeleteFile(contentInfoXmlPath);
 	return true;
 
 }
@@ -460,11 +529,11 @@ bool PackageSession::populateContentInfoStructFromdb(const string &keyName, cont
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	bool retVal;
-	std::string outXmlPath;
+	OSString outXmlPath;
 	if(!extractXmlFromDb(keyName, outXmlPath))
 	{
 		CARBONLOG_ERROR(logger, "[populateContentInfoStructFromdb] : Failed to extract xml for key name - " <<keyName.c_str());
-		outVar.contentInfoXmlPath = "";
+		outVar.contentInfoXmlPath = OSConst("");
 		outVar.contentType = "error";
 		retVal = false;
 	}
@@ -479,7 +548,7 @@ bool PackageSession::populateContentInfoStructFromdb(const string &keyName, cont
 }
 
 //it extracts the xml only from the packageContent table in package db
-bool PackageSession::extractXmlFromDb(const string &keyName, std::string &xmlPath)
+bool PackageSession::extractXmlFromDb(const string &keyName, OSString &xmlPath)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	const char **Data;
@@ -505,7 +574,7 @@ bool PackageSession::extractXmlFromDb(const string &keyName, std::string &xmlPat
 
 		OSString tempResourceFileName;
 		carbonUtilities::cuGenerateGUID(tempResourceFileName);
-		tempResourceFileName = tempFolder + OSSlash + tempResourceFileName;
+		tempResourceFileName = tempFolder + tempResourceFileName;
 
 		if(!carbonUtilities::cuCreateFileWithData((const void*)*Data, strlen(*Data), tempResourceFileName))
 		{
@@ -514,7 +583,8 @@ bool PackageSession::extractXmlFromDb(const string &keyName, std::string &xmlPat
 		}
 		else
 		{
-			carbonUtilities::cuConvertOSStringToString(tempResourceFileName, xmlPath);
+//			carbonUtilities::cuConvertOSStringToString(tempResourceFileName, xmlPath);
+			xmlPath = tempResourceFileName;
 			retVal = true;
 		}
 

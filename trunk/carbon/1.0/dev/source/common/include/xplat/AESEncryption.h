@@ -43,7 +43,7 @@ USING_NAMESPACE(std)
 class carboncipherUtilities::AESSecretKeyContainer;
 
 //currently it supports only CFB mode
-//TODO: add exception to every cipher operation
+//_TODO: add exception to every cipher operation
 class AESWrapper
 {
 
@@ -60,9 +60,15 @@ public:
 	~AESWrapper();
 
 	bool encryptBytes(const byte *inStr, size_t byteSize, std::string &outStr);
+	//this function writes the whole encrypted string and sets the length accordingly so that the string doesn't terminate with any null character
 	bool encryptString(const std::string &inStr, std::string &outStr);
 	bool encryptFile(const OSString &inFilePath, const OSString &outFilePath);
 
+	
+
+	//TODO: decrypt string is a dangerous function. We should deal in char pointers since in string, the charactes are parsed until a null comes.
+	// and it is highly probable that in encrypted string null characters are present.
+	//before using this function, use another functin which takes byte * as input
 	bool decryptBytes(const byte *inStr, size_t byteSize, std::string &outStr);
 	bool decryptString(const std::string &inStr, std::string &outStr);
 	bool decryptFile(const OSString &inFilePath, const OSString &outFilePath);

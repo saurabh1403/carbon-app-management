@@ -10,6 +10,8 @@
 #include "AESEncryption.h"
 #include <map>
 
+#include "LicenseManager.h"
+
 
 //************some constants related to package session and package data db*****************
 
@@ -43,24 +45,25 @@
 #define ResourceFileNodeName				"resourceFiles"
 #define UIDataNodeName						"uiData"
 #define ContentTypeNodeName					"contentType"
-#define InfoXmlNodeName						"infoXmlPath"
+#define InfoXmlNodeName						OSConst("infoXmlPath")
 #define ResourceBaseFolderConst				"resourceBaseFolder"
 //***************************************************************************
 
 struct contentInfo
 {
 	string contentType;
-	string contentInfoXmlPath;
+	OSString contentInfoXmlPath;
 };
 
 //_TODO: in all functions of this class, return only the data to the caller and donot contruct the output xml. This introduced coupling between this class and the protocol
-class PackageSession:public NativeSession
+class PackageSession
 {
 
 private:
 
 	OSString packagePath;
 	std::string sPackagePath;
+	std::string sPackageId;
 
 	//********************Session related members*************
 	volatile bool isSessionInitialized;
@@ -76,6 +79,10 @@ private:
 	//******************security(encryption) related members************************
 	DMM _pkgDb;		//this is not an encrypted db. only base 64 encoded xml would be present here
 	AESWrapper _contentDecoder;			//_TODO: in future make this a dynamic logic to detect the type of encryption also
+
+	//******************license related members***************************
+	long int startTime;				//this is the time at which the package session is closed. 
+	LicenseManager _pkgLicense;
 
 #ifdef WIN32
 	CRITICAL_SECTION PackageSessionCritSec;
@@ -109,19 +116,18 @@ private:
 	//it fetches the xml 
 	bool populatePackageContentXmlFromdb();
 
-	bool extractXmlFromDb(const string &keyName, std::string &xmlPath);
+	bool extractXmlFromDb(const string &keyName, OSString &xmlPath);
 
 public:
 
-	PackageSession():isSessionInitialized(false),tempMgr(4)
+	PackageSession():isSessionInitialized(false)
 	{
 
 	}
 
 	~PackageSession()
 	{
-		std::string dummyVal;
-		closeSession(dummyVal);
+		closeSession();
 	}
 
 	//here will be all functions will be present inside this class and will be called from UI. //all output string will be utf8 string
@@ -139,9 +145,9 @@ public:
 	//no need of this function now.
 	bool processJob(IDAppNativeJob &job, std::string &resStr);
 
-	bool initSession(const OSString &pkgPath);
+	bool initSession(const OSString &pkgPath, const std::string pkgId, std::string &resStr);
 
-	bool closeSession(std::string &resStr);
+	bool closeSession();
 
 };
 

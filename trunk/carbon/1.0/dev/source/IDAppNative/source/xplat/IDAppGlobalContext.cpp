@@ -47,6 +47,7 @@ bool IDAppGlobalContext::initIDApp()
 	targetFnMap["getPackageSessionData"] = getPackageSessionData;
 	targetFnMap["getContent"] = getContent;
 	targetFnMap["clearCachedContent"] = clearCachedContent;
+	targetFnMap["closeIDAppSession"] = closeIDAppSession;
 
 	//init BI
 	if(biObj.initBI()!=kBridgeInterfaceErrorNone)
@@ -68,6 +69,8 @@ bool IDAppGlobalContext::initIDApp()
 		CARBONLOG_ERROR(logger, "[initIDApp] : Failed to initialize product Database");
 		return false;
 	}
+
+	tempMgr.initWithTempLocations(1);
 
 	isIDAppInitialized = true;
 
@@ -97,9 +100,13 @@ bool IDAppGlobalContext::closeIDApp()
 
 	CARBONLOG_TRACE(logger, "Closing temp manager.......");
 	tempMgr.clearTemp();
+	
+	IDAppGlobalContext::getInstance().writePktToBi("<result>NativeProcessClosed</result>");
 
 	CARBONLOG_TRACE(logger, "Closing bridge interface .......");
 	biObj.closeBI();
+
+	closeAllPackageSessions();
 
 	return true;
 }

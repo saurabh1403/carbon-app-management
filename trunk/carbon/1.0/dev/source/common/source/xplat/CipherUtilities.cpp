@@ -84,7 +84,7 @@ namespace carboncipherUtilities
 		ivStr64.assign(keyStream, index_iterator, ivLength);
 		index_iterator += ivLength;
 
-		//TODO:
+		//_TODO:
 		//put the logic for decoding keys and iv
 		string keyStr, ivStr;
 		keyStr = keyStr64;
@@ -140,7 +140,7 @@ namespace carboncipherUtilities
 		delete val;
 		val = NULL;
 
-		//TODO: put the logic to encode the keys
+		//_TODO: put the logic to encode the keys
 		outKeyStream.append((char*)key, key_length);
 		outKeyStream.append((char*)iv, block_length);
 

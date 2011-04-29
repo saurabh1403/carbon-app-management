@@ -49,7 +49,8 @@ int main(int argc, char *argv[])
 	return 0;
 */
 
-	CoInitialize(NULL);
+//	CoInitialize(NULL);
+	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	if(!IDAppGlobalContext::getInstance().initIDApp())
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
 		//TODO: show a native dialogue here saying the package is corrupt
 		return -1;
 	}
+
+	IDAppGlobalContext::getInstance().writePktToBi("<result>NativeProcessLaunched</result>");
 
 	bool toContinue = true;
 

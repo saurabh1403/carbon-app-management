@@ -1,6 +1,7 @@
 
 
 #include "Utilities.h"
+#include <string>
 
 namespace carbonUtilities
 {
@@ -31,6 +32,49 @@ bool getIntFromCharArray(int &outVal, const char *inArr,unsigned int start_index
 
 	return true;
 
+}
+
+bool getLongFromCharArray(const char * inStr, long int &outNum)
+{
+	if(inStr == NULL)
+		return false;
+
+	outNum = atol(inStr);
+
+	return true;
+
+}
+
+bool getStringFromLong(const long int inNum, string &outStr)
+{
+	char a[30];
+	_ltoa_s(inNum, a, 30, 10);
+	outStr = a;
+
+	return true;
+}
+
+
+bool cuCreateCarbonLicenseDirectory()
+{
+	OSString folderPath;
+	carbonUtilities::cuGetWinSpecificFolderPath(folderPath, CSIDL_COMMON_APPDATA);
+	folderPath += CarbonAppDataRelativeFolder;
+	folderPath += OSSlash;
+
+	return cuCreateDirectory(folderPath);
+}
+
+
+bool cuGetWinSpecificFolderPath(OSString & outPath,int FolderIdentifier )
+{
+	TCHAR path[MAX_PATH];
+	if(!SHGetSpecialFolderPath(NULL,path,FolderIdentifier,false))
+	{
+		return false;
+	}
+	outPath.assign(path);
+	return true;
 }
 
 
@@ -216,20 +260,111 @@ bool cuGetOSStringFromInt(unsigned int input, OSString &outNum)
 	cuConvertStringToOSString(num, outNum);
 	return true;
 }
+	
+bool readFromFile(const OSString &inFilePath, char ** fileData, unsigned int &dataLen)
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
+	DWORD dwFileSize;
+	DWORD dwBytesRead;
+	char * fileBuff = NULL;
+	HANDLE fileStream;
+
+	fileStream = CreateFile(inFilePath.c_str(),GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	if(fileStream == INVALID_HANDLE_VALUE)
+	{
+		CARBONLOG_ERROR(logger, "[readFromFile] : Failed to create file handle for file present at " << inFilePath.c_str());
+		return false;
+	}
+
+	dwFileSize = GetFileSize(fileStream, NULL);
+	if(dwFileSize == INVALID_FILE_SIZE)
+	{
+		CARBONLOG_ERROR(logger, "[readFromFile] : Unable to get file size for file at location " << inFilePath.c_str() << " and the platform error is " << GetLastError());
+		return false;
+	}
+	
+	fileBuff = (char *)malloc(sizeof(char) * (dwFileSize+1));
+	dataLen = dwFileSize;
+	if(!fileBuff)
+	{
+		return false;
+	}
+	
+	if(!ReadFile(fileStream, (LPVOID)fileBuff, dwFileSize, &dwBytesRead, NULL))
+	{
+		CARBONLOG_ERROR(logger, "[readFromFile] : Unable to read file at location - " << inFilePath.c_str() << " and the platform error is " << GetLastError());
+		free(fileBuff);
+		return false;
+	}
+
+	*fileData = fileBuff;
+
+	return true;
+}
 
 //TODO:
 bool cuDeleteDirectory(const OSString &path)
 {
+	if(PathIsDirectory(path.c_str()) == FALSE)
+		return false;
+
+	cuDeleteDirectoryContent(path);
+	RemoveDirectory(path.c_str());
+
+	return true;
+}
+
+bool cuDeleteFile(const OSString &filePath)
+{
+	DeleteFile(filePath.c_str());
 
 	return true;
 }
 
 
-//TODO: 
+//_TODO: improve this. recursion is bad for health
 bool cuDeleteDirectoryContent(const OSString &dirPath)
-{
+{	
+	if(PathIsDirectory(dirPath.c_str()) == FALSE)
+		return false;
+
+	TCHAR fileFound[MAX_PATH];
+	WIN32_FIND_DATA info;
+	HANDLE hp; 
+	_stprintf_s(fileFound,MAX_PATH, _T("%s\\*.*"), dirPath.c_str());
+	hp = FindFirstFile(fileFound, &info);
+	do
+	{
+		if (!((_tcscmp(info.cFileName, _T("."))==0)||
+			(_tcscmp(info.cFileName, _T(".."))==0)))
+		{
+			if((info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)==
+				FILE_ATTRIBUTE_DIRECTORY)
+			{
+				OSString subFolder = dirPath;
+				subFolder.append(OSSlash);
+				subFolder.append(info.cFileName);
+				cuDeleteDirectoryContent(subFolder);
+				RemoveDirectory(subFolder.c_str());
+			}
+			else
+			{
+				_stprintf_s(fileFound, MAX_PATH, _T("%s\\%s"), dirPath.c_str(), info.cFileName);
+				BOOL retVal = DeleteFile(fileFound);
+			}
+		}
+
+	}while(FindNextFile(hp, &info)); 
+	FindClose(hp);
 
 	return true;
+}
+
+bool cuCopyFile(const OSString &infilePath, const OSString &outPath)
+{
+	return CopyFile(infilePath.c_str(), outPath.c_str(), false);
+
 }
 
 
@@ -252,12 +387,6 @@ bool getCarbonCommonFolderPath(OSString &outPath)
 
 	outPath=commonPath;
 	outPath += kUCarbonCommonFolderRelPath;
-
-	return true;
-}
-
-bool testfn(vector<OSString> temp)
-{
 
 	return true;
 }

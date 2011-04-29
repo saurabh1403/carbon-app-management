@@ -27,9 +27,14 @@ public:
 	//if session id is empty, it returns the active session
 	T *getSessionWithId(const std::string &sessId = "");
 
+	//it removes active session in case of empty sessId
+	void removeSessionWithId(const std::string &sessId = "");
+
 	static SessionMgr<T> &getInstance(void);
 	void removeAllSession();
 	bool createSession(std::string, T*);
+
+	void getAllSessions(vector<std::string> &sessIds);
 
 	//_TODO: it will set the session as active one for the given id
 	bool setSessionAsActive(std::string);
@@ -47,6 +52,16 @@ template <class T>
 SessionMgr<T>::~SessionMgr()
 {
 	_sessions.clear();
+}
+
+template <class T>
+void SessionMgr<T>::getAllSessions(vector<std::string> &sessIds)
+{
+	std::map<std::string, T*>::const_iterator itr = _sessions.begin();
+
+	for(; itr!= _sessions.end(); itr++)
+		sessIds.push_back(itr->first);
+
 }
 
 template <class T>
@@ -81,6 +96,16 @@ void SessionMgr<T>::removeAllSession()
 {
 	_sessions.clear();
 }
+
+template <class T>
+void SessionMgr<T>::removeSessionWithId(const std::string &sessionId = "")
+{
+	std::map<std::string, T*>::const_iterator itr = (sessionId.empty()) ? _sessions.find(activeSession) : _sessions.find(sessionId);
+
+	(itr == _sessions.end())? NULL : _sessions.erase(itr);
+
+}
+
 
 template <class T>
 bool SessionMgr<T>::createSession(std::string sessionId, T* sessionPtr)

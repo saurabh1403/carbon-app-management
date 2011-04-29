@@ -16,7 +16,7 @@ static const int aBusyTimeoutMs = 2000;
 using namespace std;
 
 
-//TODO: make a memory pool and associate the clean up of that memory pool with the destructor
+//_TODO: make a memory pool and associate the clean up of that memory pool with the destructor
 class DMM
 {
 
@@ -55,7 +55,7 @@ public:
 	bool geterrMsg(string &outErrMsg);
 
 	int commit();
-	//TODO: add functions for beginning and closing transactions
+	//_TODO: add functions for beginning and closing transactions
 
 	string errMsg;
 

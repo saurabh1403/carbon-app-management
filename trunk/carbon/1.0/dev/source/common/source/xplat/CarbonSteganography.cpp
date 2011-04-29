@@ -1,6 +1,7 @@
 
 
 #include "CarbonSteganography.h"
+#include "Utilities.h"
 
 //All third party code. Slightly modified. Lots of improvement needed. poorly written code.
 char ExtractChar( BMP& Image, int i, int j)
@@ -598,11 +599,20 @@ namespace carbonStegano
 		return true;
 	}
 
+	bool hideDataInBmp(const std::string &inData, const OSString &inBmpFilePath, const OSString &outBmpFilePath)
+	{
+		std::string src, dest;
 
-	//TODO:
+		carbonUtilities::cuConvertOSStringToString(inBmpFilePath, src);
+		carbonUtilities::cuConvertOSStringToString(outBmpFilePath, dest);
+
+		return hideDataInBmp(inData, src, dest);
+	}
+
+	//_TODO:
 	bool retriveFileFromBmpStream(const std::string &inBmpFileDataStream, const std::string &outFilePath){ return true;}
 
-	//TODO:
+	//_TODO:
 	bool retrieveDataFromBmpStream(const std::string &inBmpFileDatastream, const std::string &outData){return true; }
 
 	bool retrieveDataFromBmp(const std::string &inBmpFilePath, std::string &outData)

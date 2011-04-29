@@ -11,6 +11,13 @@ TempManager::TempManager(unsigned int nCountLocation)
 #endif
 
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+	initWithTempLocations(nCountLocation);
+
+}
+
+bool TempManager::initWithTempLocations(unsigned int nCountLocation)
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 
 	if(nCountLocation > 10)
 		nCountLocation = 10;
@@ -38,6 +45,7 @@ TempManager::TempManager(unsigned int nCountLocation)
 
 	}
 
+	return true;
 }
 
 #ifdef WIN32

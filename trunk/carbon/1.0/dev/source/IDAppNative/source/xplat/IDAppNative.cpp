@@ -4,6 +4,7 @@
 #include "IDAppNative.h"
 #include "IDAppConstants.h"
 #include "CarbonXMLParser.h"
+#include <vector>
 
 typedef void (PackageSession::*FNMETHOD) ( IDAppNativeJob &job, std::string &resStr);
 
@@ -27,6 +28,53 @@ void processJob(const std::string &jobMsg, std::string &resStr)
 
 }
 
+void closeAllPackageSessions()
+{
+	std::vector<string> sessionIds;
+
+	SessionMgr<PackageSession>::getInstance().getAllSessions(sessionIds);
+	
+	std::vector<string>::const_iterator itr = sessionIds.begin();
+
+	for(; itr!= sessionIds.end(); itr++)
+		closePackageSessionWithId(*itr);
+
+}
+
+bool closePackageSessionWithId(const std::string &pkgSessionId)
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
+	bool retVal = true;
+	PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(pkgSessionId);
+
+	if(pkgSession != NULL)
+	{
+		if(!pkgSession->closeSession())
+		{
+			//no logging. already must have been done
+			retVal = false;			
+		}
+		else
+		{
+			retVal = true;			
+		}
+
+		//delete session as well as remove entry
+		SessionMgr<PackageSession>::getInstance().removeSessionWithId(pkgSessionId);
+		delete pkgSession;
+
+	}
+
+	else
+	{
+		CARBONLOG_ERROR(logger, "[closePackageSession] : No Session exists for the session id "<<pkgSessionId);
+		retVal = false;
+	}
+
+	return retVal;
+
+}
 
 void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 {
@@ -61,20 +109,22 @@ void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 		return;
 	}
 
+	std::string resStr = "";
+
 	//check whether the session is already opened
 	PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(inJob.sessionId);
 
 	if(pkgSession != NULL)		//already opened. call the init again. thats all
 	{
-		if(!pkgSession->initSession(pkgPath))
+		if(!pkgSession->initSession(pkgPath, pkgId, resStr))
 		{
 			string _temp;
-			IDAppNativeJob::getErrorXmlNode(_temp, "Failed to init the session");
-			inJob.getErrorXmlString(outMsg, _temp);
+//			IDAppNativeJob::getErrorXmlNode(_temp, "Failed to init the session");
+			inJob.getErrorXmlString(outMsg, resStr);
 		}
 		else
 			inJob.getOutputXmlString(OutputXmlNode, outMsg);
-		return;
+		return;	
 	}
 
 	else
@@ -82,12 +132,12 @@ void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 		//*****open the package session and make an entry in the session manager
 		pkgSession = new PackageSession();
 
-		if(!pkgSession->initSession(pkgPath))
+		if(!pkgSession->initSession(pkgPath, pkgId, resStr ))
 		{
 			string temp;
 			CARBONLOG_ERROR(logger, "[startPackageSession] : Failed to initialize the package session");
-			IDAppNativeJob::getErrorXmlNode(temp,"Error Initializing Package Session");
-			inJob.getErrorXmlString(outMsg,temp);
+//			IDAppNativeJob::getErrorXmlNode(temp,"Error Initializing Package Session");
+			inJob.getErrorXmlString(outMsg,resStr);
 			return;
 		}
 
@@ -133,46 +183,30 @@ void getContent(IDAppNativeJob &inJob, std::string &outMsg)
 }
 
 
-//TODO: closing a particular package session
+//closing a particular package session
 void closePackageSession(IDAppNativeJob &inJob, std::string &outMsg)
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
 	outMsg = "closePackageSession function routine"; 
 	CARBONLOG_TRACE(logger,"in closePackageSession routine");
-	
-	PackageSession *pkgSession = SessionMgr<PackageSession>::getInstance().getSessionWithId(inJob.sessionId);
 
-	if(pkgSession != NULL)
+	if(!closePackageSessionWithId(inJob.sessionId))
 	{
-		std::string outputXml;
-		if(!pkgSession->closeSession(outputXml))
-		{
-			//no logging. already must have been done
-			inJob.getErrorXmlString(outputXml, outMsg);
-			return;
-		}
-		else
-		{
-			inJob.getOutputXmlString(outputXml, outMsg);
-			return;
-		}
+		inJob.getErrorXmlString(outMsg, "Failed to close the package session or invalid session");
 	}
-
 	else
 	{
-		CARBONLOG_ERROR(logger, "[closePackageSession] : No Session exists for the session id "<<inJob.sessionId);
-		inJob.getErrorXmlString(outMsg, "The Package Session id is invaid");
+		inJob.getOutputXmlString(OutputXmlNode, outMsg);
 	}
 
-	//make the proper entries in license state
+	return;
 
 }
 
-//TODO: closing of whole IDApp
 void closeIDAppSession(IDAppNativeJob &inJob, std::string &outMsg)
 {
-	IDAppGlobalContext::getInstance().handleIDAppCloseSignal();
 
+	IDAppGlobalContext::getInstance().handleIDAppCloseSignal();
 }
 
 void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg)
@@ -202,7 +236,7 @@ void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg)
 	for(; itr != pkgPresent.end(); itr++)
 	{
 		XMLNode pkgNode;
-		xmlObj.createNodeWithNameAndValue("package","",pkgNode);
+		xmlObj.createNodeWithNameAndValue("pkg","",pkgNode);
 		xmlObj.addChildToNode("Name", itr->name, pkgNode);
 		xmlObj.addChildToNode("packageId", itr->pkgId, pkgNode);
 		xmlObj.addChildToNode("titleText", itr->titleText, pkgNode);
@@ -227,7 +261,6 @@ void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg)
 
 	CARBONLOG_DEBUG(logger, "[getAvailablePackages] : The xml constructed is "<<tempStr.c_str());
 }
-
 
 
 void getPackageSessionData(IDAppNativeJob &inJob, std::string &outMsg)
