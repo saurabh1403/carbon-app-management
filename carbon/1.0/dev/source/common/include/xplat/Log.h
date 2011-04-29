@@ -10,7 +10,7 @@
 #endif
 
 
-//TODO: write proper functions in carbonDefaultLogger class
+//_TODO: write proper functions in carbonDefaultLogger class
 class carbonDefaultLogger
 {
 

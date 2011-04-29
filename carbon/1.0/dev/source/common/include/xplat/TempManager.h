@@ -28,8 +28,11 @@ private:
 
 public:
 
-	TempManager(unsigned int nCountLocation  = 1);
+	//why the hell count is sent to constructor
+	TempManager(unsigned int nCountLocation  = 0);
 	~TempManager();
+
+	bool initWithTempLocations(unsigned int nCountLocation  = 0);
 
 	//it just returns the file name and not creates the file. fileName is just a guid
 	bool getNewTempFilePath(OSString &tempfolderPath, OSString &tempFileName);

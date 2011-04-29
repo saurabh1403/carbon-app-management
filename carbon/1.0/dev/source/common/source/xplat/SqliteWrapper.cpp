@@ -215,7 +215,7 @@ bool DMM::getQueryResult(const string &fields, const aMapStr &keyValues, const s
 
 	free(outCharList);
 
-	return true;
+	return true;	
 
 }
 

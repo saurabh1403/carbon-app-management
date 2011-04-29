@@ -14,6 +14,8 @@ void startPackageSession(IDAppNativeJob &inJob, std::string &outMsg);
 
 void closePackageSession(IDAppNativeJob &inJob, std::string &outMsg);
 
+void closeIDAppSession(IDAppNativeJob &inJob, std::string &outMsg);
+
 void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg);
 
 void getPackageSessionData(IDAppNativeJob &inJob, std::string &outMsg);
@@ -21,4 +23,9 @@ void getPackageSessionData(IDAppNativeJob &inJob, std::string &outMsg);
 void getContent(IDAppNativeJob &inJob, std::string &outMsg);
 
 void clearCachedContent(IDAppNativeJob &inJob, std::string &outMsg);
+
+//it closes all the sessions
+void closeAllPackageSessions();
+bool closePackageSessionWithId(const std::string &pkgSessionId);
+
 

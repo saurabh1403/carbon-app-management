@@ -22,6 +22,7 @@ namespace carbonStegano
 #ifdef WIN32
 	bool hideFileInBmp(const OSString &infilePath, const OSString &bmpFilePath, const OSString &outBmpFilePath);
 	bool retriveFileFromBmp(const OSString &inBmpFilePath, const OSString &outFilePath);
+	bool hideDataInBmp(const std::string &inData, const OSString &inBmpFilePath, const OSString &outBmpFilePath);
 
 #endif
 

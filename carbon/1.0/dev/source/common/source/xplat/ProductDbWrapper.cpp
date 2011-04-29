@@ -16,6 +16,7 @@ bool PDbWrapper::initProductDb()
 		return false;
 	}
 
+	dbPath += OSSlash;
 	dbPath += kUProductDataBaseName;
 
 	if(_dbObj.init(dbPath))
