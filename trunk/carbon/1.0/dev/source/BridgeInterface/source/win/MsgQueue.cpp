@@ -28,22 +28,23 @@ bool MsgQueue::pop(BIPacket &pkt)
 {
 
 	EnterCriticalSection(&carbonCritSec);
+	bool retVal = false;
 
 	if(pktQueue.empty())
 	{
-		LeaveCriticalSection(&carbonCritSec);
-		return false;
+		retVal = false;
 	}
 
 	else
 	{
 		pkt = pktQueue.front();
 		pktQueue.pop();
+		retVal = true;
 	}
 
 	LeaveCriticalSection(&carbonCritSec);
 
-	return true;
+	return retVal;
 }
 
 bool MsgQueue::clearQueue()

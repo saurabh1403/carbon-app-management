@@ -7,7 +7,7 @@
 #if DEBUG_MODE_LOGGING_ENABLE == TRUE
 
 std::fstream _fWrite(DEBUG_FILE_PATH, std::ios::out);
-#define writeLog(msg)		_fWrite.write(msg, sizeof(msg));	\
+#define writeLog(msg)		_fWrite.write(msg, strlen(msg));	\
 	_fWrite.flush();
 
 #else
@@ -33,6 +33,7 @@ static bool BIRawReadTry(BridgeInterface *obj, byte * buffer, int mSizeBuff)
 //			file<<"some error in stream reading\r\n";
 //			perror("read failed");
 //			exit(1);
+			writeLog("failed in reading from stdin. fatal error");
 			return false;
 		}
 
@@ -49,6 +50,7 @@ static bool BIRawReadTry(BridgeInterface *obj, byte * buffer, int mSizeBuff)
 			//the object is so big
 			if(nReadCount > 100)
 			{
+				writeLog("data is too big to read");
 				return false;
 				//return 0;
 			}
@@ -97,6 +99,8 @@ DWORD WINAPI BridgeInterface::listenerThread(LPVOID lpParam)
 				return 0;
 			}
 			buffer[pktMeta.size] = '\0';
+			writeLog("Data read is \n");
+			writeLog(buffer);
 			isDataRead = true;
 		}
 
@@ -247,7 +251,6 @@ static BridgeInterfaceStatus BIRawWrite(BridgeInterface *obj,const byte * buffer
 		}
 		break;
 	}
-
 	return kBridgeInterfaceErrorNone;
 }
 
@@ -265,7 +268,14 @@ BridgeInterfaceStatus BridgeInterface::writePkt(const BIPacket &inPkt)
 	bufToSend = inPkt.buffer;
 
 	BridgeInterfaceStatus biStatus = BIRawWrite(this, (byte *)bufToSend.c_str(), bufToSend.length());
-	writeLog("exiting crit section for writing. successful write\n");
+	if(biStatus != kBridgeInterfaceErrorNone)
+	{
+		writeLog("Error in writing the packet buffer");
+	}
+
+	writeLog("data written \n");
+	writeLog(inPkt.buffer.c_str());
+	writeLog("\nexiting crit section for writing. successful write\n");
 
 	LeaveCriticalSection(&carbonBridgeCritSec);
 

@@ -41,7 +41,6 @@
 #define contentInfoNodesXquery				OSConst("/contents/content")
 
 
-
 #define ResourceFileNodeName				"resourceFiles"
 #define UIDataNodeName						"uiData"
 #define ContentTypeNodeName					"contentType"

@@ -4,6 +4,10 @@
 #include "Constants.h"
 #include "EDMM.h"
 
+#define pkgThumbnailIconXQuery		OSConst("/packageInfo/thumbnailIcon")
+#define pkgMainIconXQuery			OSConst("/packageInfo/mainIcon")
+#define pkgDescriptionXQuery		OSConst("/packageInfo/description")
+#define pkgTitleXQuery				OSConst("/packageInfo/title")
 
 //a struct for getting the package info in this form.
 struct packageInfo
@@ -11,7 +15,10 @@ struct packageInfo
 	string name;
 	string pkgId;
 	string titleText;
-	string imageIconPath;
+	string coverPageIconPath;
+	string thumbnailIconPath;
+	string description;
+	string pkgPath;				//utf 8 path for package installed directory
 };
 
 
@@ -54,5 +61,6 @@ public:
 
 	//outPath should be unicode since it is a path 
 	bool getPackageDirectory(const string &pkgId, OSString &outPath );
+	bool getPackageDirectory(const string &pkgId, std::string &outPath );
 
 };

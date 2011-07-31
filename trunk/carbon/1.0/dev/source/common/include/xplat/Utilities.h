@@ -1,9 +1,5 @@
 
 #pragma once
-
-#include "Constants.h"
-#include "Log.h"
-
 #ifdef WIN32
 #include <shlwapi.h>
 #include<Shlobj.h>
@@ -11,6 +7,10 @@
 //#pragma comment(lib,"Shell32.lib")
 
 #endif
+
+#include "Constants.h"
+#include "Log.h"
+
 namespace carbonUtilities
 {
 

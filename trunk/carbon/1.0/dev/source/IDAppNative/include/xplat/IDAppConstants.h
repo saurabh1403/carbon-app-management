@@ -10,6 +10,7 @@
 
 #define OutputXmlNode				"<outputXml></outputXml>"
 #define CallIdentifierNodeName		"CallIdentifier"
+#define SessionIdNodeName			"SessionId"
 
 #define XmlInitErrorNode			"<error>Failed to init Xml</error>"
 #define XmlProcessingErrorNode		"<error>Failed to process error</error>"

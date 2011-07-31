@@ -5,7 +5,6 @@
 using namespace carbonCipherConfiguration;
 using namespace carboncipherUtilities;
 
-
 //it makes a default key and then uses it.
 AESWrapper::AESWrapper(AESAlgoCode aesAlgo)
 {
