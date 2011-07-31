@@ -22,7 +22,7 @@ public:
 	static DWORD WINAPI WorkerThread(LPVOID lpParam);
 #endif
 
-	bool ThreadPool::initWithThreads();
+	bool initWithThreads();
 	bool initWithThreads(unsigned int nthreads);
 
 	//a synchronous blocking call.

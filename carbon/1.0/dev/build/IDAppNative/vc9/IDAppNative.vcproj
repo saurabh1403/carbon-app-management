@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			UseOfMFC="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -97,6 +98,7 @@
 			OutputDirectory="$(SolutionDir)..\..\..\target\$(ConfigurationName)\win"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			UseOfMFC="0"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -121,7 +123,7 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$SolutionDir\..\..\..\..\source\common\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\BridgeInterface\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\IDAppNative\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\imports\Log Module\apache-log4cxx-0.10.0\src\main\include&quot;;&quot;$SolutionDir\..\..\..\..\imports\Sqlite\sqlite\&quot;;&quot;$SolutionDir\..\..\..\..\configurations\cpp\&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\xplat&quot;;&quot;$SolutionDir\..\..\..\..\source\ApplicationProvisioningLibrary\include\win&quot;;&quot;$SolutionDir\..\..\..\..\imports\Crypto++\cryptopp561\&quot;;&quot;$SolutionDir\..\..\..\..\imports\Steganography&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

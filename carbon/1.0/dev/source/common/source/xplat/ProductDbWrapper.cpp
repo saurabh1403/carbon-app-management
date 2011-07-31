@@ -30,24 +30,6 @@ bool PDbWrapper::initProductDb()
 	return true;
 }
 
-//_TODO:
-bool PDbWrapper::getAvailablePackages(vector<packageInfo> &outVec)
-{
-	//no need of this functoin as of now
-
-	packageInfo temp;
-	temp.name = "hello world";
-	temp.pkgId = "dsdfdff";
-	temp.titleText = "10 classs";
-	temp.imageIconPath = "d drive";
-
-	outVec.push_back(temp);
-
-	return true;
-
-}
-
-
 bool PDbWrapper::getPackageDirectory(const string &pkgId, OSString &outPath )
 {
 	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
@@ -76,6 +58,35 @@ bool PDbWrapper::getPackageDirectory(const string &pkgId, OSString &outPath )
 
 	return true;
 }
+
+
+bool PDbWrapper::getPackageDirectory(const string &pkgId, std::string &outPath )
+{
+	CARBONLOG_CLASS_PTR logger(carbonLogger::getLoggerPtr());
+
+	if(!isInitialized)
+	{
+		return false;
+	}
+
+	const char **pkgDir;
+	aMapStr keyVal;
+	keyVal["package_id"] = pkgId;
+	keyVal["key"] = kPackageDirConst;
+	if(!_dbObj.getQueryResult("value", keyVal, "package_data", &pkgDir) || *pkgDir== NULL)
+	{
+		CARBONLOG_ERROR(logger, "Failed to get the installed dir for package from pdb" <<pkgId);
+		return false;
+	}
+
+	outPath = *pkgDir;
+
+	free((void*)*pkgDir);
+	free(pkgDir);
+
+	return true;
+}
+
 
 
 //_TODO
@@ -122,8 +133,7 @@ bool PDbWrapper::getInstalledPackages(vector<packageInfo> &outVec)
 			continue;
 		}
 
-		//******get the package icon information
-		pkgInfo.clear();
+/*		pkgInfo.clear();
 		_keyVal.clear();
 		_keyVal["package_id"] = *itr;
 		_keyVal["key"] = kPackageIconConst;
@@ -136,11 +146,43 @@ bool PDbWrapper::getInstalledPackages(vector<packageInfo> &outVec)
 		}
 		else
 			pkgIconPath = pkgInfo[0];
+*/
+		//******get the package icon information
+		
+		std::string tempVal;
+		if(pkgInfoXml.stringValueForXQuery(pkgThumbnailIconXQuery, tempVal))
+		{
+			temp.thumbnailIconPath = tempVal;
+		}
+		tempVal = "";
+
+		if(pkgInfoXml.stringValueForXQuery(pkgMainIconXQuery, tempVal))
+		{
+			temp.coverPageIconPath = tempVal;
+		}
+		tempVal = "";
+
+		if(pkgInfoXml.stringValueForXQuery(pkgDescriptionXQuery, tempVal))
+		{
+			temp.description = tempVal;
+		}
+		tempVal = "";
+
+		if(pkgInfoXml.stringValueForXQuery(pkgTitleXQuery, tempVal))
+		{
+			temp.titleText = tempVal;
+		}
+		tempVal = "";
+
+		if(!getPackageDirectory(*itr, tempVal))
+		{
+			CARBONLOG_ERROR(logger, "Failed to get the package install directory. So, the package is invalid. Skipping the package - %s"<< itr->c_str());
+			continue;
+		}
+		temp.pkgPath = tempVal;
 
 		temp.name = "hello world";
 		temp.pkgId = *itr;
-		temp.titleText = "hello world";
-		temp.imageIconPath = pkgIconPath;			//if icon path is empty, it should show the default icon
 
 		outVec.push_back(temp);
 

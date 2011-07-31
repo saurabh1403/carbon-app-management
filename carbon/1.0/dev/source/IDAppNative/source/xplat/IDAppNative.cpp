@@ -240,7 +240,10 @@ void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg)
 		xmlObj.addChildToNode("Name", itr->name, pkgNode);
 		xmlObj.addChildToNode("packageId", itr->pkgId, pkgNode);
 		xmlObj.addChildToNode("titleText", itr->titleText, pkgNode);
-		xmlObj.addChildToNode("imageIconPath", itr->imageIconPath, pkgNode);
+		xmlObj.addChildToNode("mainIconPath", itr->coverPageIconPath, pkgNode);
+		xmlObj.addChildToNode("thumbnailIconPath", itr->thumbnailIconPath, pkgNode);
+		xmlObj.addChildToNode("description", itr->description, pkgNode);
+		xmlObj.addChildToNode("pkgInstalledDir", itr->pkgPath, pkgNode);
 
 		if(!xmlObj.addChildToNode(pkgNode, pkgListNode))
 		{
@@ -259,7 +262,8 @@ void getAvailablePackages(IDAppNativeJob &inJob, std::string &outMsg)
 
 	inJob.getOutputXmlString(tempStr, outMsg);
 
-	CARBONLOG_DEBUG(logger, "[getAvailablePackages] : The xml constructed is "<<tempStr.c_str());
+	CARBONLOG_TRACE(logger,"out of getAvailablePackages routine");
+//	CARBONLOG_DEBUG(logger, "[getAvailablePackages] : The xml constructed is "<<tempStr.c_str());
 }
 
 

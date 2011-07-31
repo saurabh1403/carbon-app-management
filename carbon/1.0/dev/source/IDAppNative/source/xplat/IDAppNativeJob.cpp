@@ -30,6 +30,10 @@ void IDAppNativeJob::getErrorXmlString(string &outXml, string errNode)
 	outXml += this->callIdentifier;
 	outXml += "</CallIdentifier>";
 
+	outXml += "<SessionId>";
+	outXml += this->sessionId;
+	outXml += "</SessionId>";
+
 	if(errNode.empty())
 	{
 		outXml += "<error>";
@@ -100,6 +104,11 @@ void IDAppNativeJob::getOutputXmlString(const std::string &targetResultStr, std:
 	XMLNode callIdNode;
 	xmlObj.createNodeWithNameAndValue(CallIdentifierNodeName, this->callIdentifier, callIdNode);
 	xmlObj.addChildToNode(callIdNode, rootNode);
+
+	//*********adding session id in xml**********
+	XMLNode sessIdNode;
+	xmlObj.createNodeWithNameAndValue(SessionIdNodeName, this->sessionId, sessIdNode);
+	xmlObj.addChildToNode(sessIdNode, rootNode);
 
 	//**********adding output xml****************
 	CarbonXMLParser outputXmlParser;

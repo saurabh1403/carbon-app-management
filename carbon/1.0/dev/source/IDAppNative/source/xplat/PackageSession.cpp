@@ -57,7 +57,7 @@ bool PackageSession::initSession(const OSString &pkgPath, const std::string pkgI
 	_pkgInfo.licenseDbPath = apdDbPath;
 	_pkgInfo.pkgPath = packagePath;
 
-	//_TODO: for testing only
+	//TODO: for testing only
 	if(!_pkgLicense.init(_pkgInfo))
 	{
 		CARBONLOG_FATAL(logger, "[initSession] : Failed to init APD library");
@@ -143,7 +143,7 @@ bool PackageSession::closeSession()
 	for(; itr != contentNodes.end(); itr++)
 	{
 		carbonUtilities::cuDeleteFile(itr->contentInfoXmlPath);
-	}	
+	}
 
 	isSessionInitialized = false;
 
@@ -375,8 +375,8 @@ bool PackageSession::getContent(const std::string &argXml, std::string &resStr)
 			CARBONLOG_FATAL(logger, "[PackageSession::getContent] : Failed to decode the content ");
 			IDAppNativeJob::getErrorXmlNode(resStr, "Failed to decode content");
 			return false;
-		}*/
-		
+		}
+*/		
 		if(!carbonUtilities::cuCopyFile(osInPath, osOutPath))
 		{
 			CARBONLOG_FATAL(logger, "[PackageSession::getContent] : Failed to copy the content ");
